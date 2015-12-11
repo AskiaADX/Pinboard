@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<tests xmlns="http://www.askia.com/ADCUnitTestSchema"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.askia.com/ADCUnitTestSchema http://www.askia.com/Downloads/dev/schemas/adc2.0/UnitTests.xsd">
+
+  <units>
+
+    <test id="not_empty" description="The placeholder section should not be empty" cases="all">     
+      <asserts>
+        <placeholder>
+          <assert_not_empty />
+        </placeholder>
+      </asserts>
+    </test>
+  </units>
+    
+</tests>
+
+          

@@ -1,0 +1,64 @@
+@charset "utf-8";
+/* CSS Document */
+
+.controlContainer { position:relative; }
+
+.clear { clear:both; }
+
+.smartNote 	 { 
+	position:absolute; background:#1f1f1f; display:block;
+	-webkit-border-radius: 22px;
+	-moz-border-radius: 22px;
+	border-radius: 22px;
+	border:2px solid #4e4e6e; 
+	-webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+	box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+	z-index:10000;
+	cursor:default;
+}
+.smartNote .feeling, .smartNote .closeNote, .smartNote .confirmNote, .smartNote .deleteNote { cursor:pointer; }
+.smartNote .closeNote, .smartNote .confirmNote, .smartNote .deleteNote {
+	display:block; position:absolute; -webkit-border-radius:100%; -moz-border-radius:100%; border-radius:100%; border:2px solid #4e4e6e;
+}
+.smartNote .closeNote:hover, .smartNote .deleteNote:hover {
+	background-color:#A50706; border-color:#A50706;
+}
+.smartNote .confirmNote:hover {
+	background-color:#44d106; border-color:#44d106;
+}
+.smartNote .closeNote   { width:20px; height:20px; background:url(cross.png) center no-repeat #4e4e6e; top:-10px; right:-10px; }
+.smartNote .confirmNote { width:30px; height:30px; background:url(tick.png) center no-repeat #4e4e6e; bottom:-15px; right:-15px; }
+.smartNote .deleteNote  { width:30px; height:30px; background:url(bin.png) center no-repeat #4e4e6e; bottom:-15px; right:25px; }
+.smartNote textarea { position:absolute; top:50px; left:45px; width:240px; height:50px; resize:none; -webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px; border:2px solid #6e6e8e; }
+.smartNote p { 
+	position:absolute; top:10px; left:40px; padding:0px; margin:0px; width:250px; text-align:center;
+	font-family:Arial, sans-serif; 
+	font-size:13px;
+	color:#fff;
+	font-weight:bold;
+}
+.goodVibe { 
+	display:block; width:27px; height:27px; position:absolute; top:5px; left:5px; -webkit-border-radius:100%; -moz-border-radius:100%; border-radius:100%;
+	background:url(sprite.png) -2px -1px no-repeat #4e4e6e; border:2px solid #4e4e6e;
+}
+.neutralVibe { 
+	display:block; width:27px; height:27px; position:absolute; top:40px; left:5px; -webkit-border-radius:100%; -moz-border-radius:100%; border-radius:100%;
+	background:url(sprite.png) -33px -1px no-repeat #4e4e6e;; border:2px solid #4e4e6e;
+}
+.badVibe { 
+	display:block; width:27px; height:27px; position:absolute; top:75px; left:5px; -webkit-border-radius:100%; -moz-border-radius:100%; border-radius:100%;
+	background:url(sprite.png) -64px -1px no-repeat #4e4e6e; border:2px solid #4e4e6e;
+}
+.smartNote .goodVibe.active { background-position:-2px -33px; background-color:#6EEA0F; border-color:#6EEA0F; }
+.smartNote .neutralVibe.active { background-position:-33px -33px; background-color:#FFEB00; border-color:#FFEB00; }
+.smartNote .badVibe.active { background-position:-64px -33px; background-color:#FF0000; border-color:#FF0000; }
+.smartArea { cursor:crosshair; }
+.smartArea .pin { display:block; position:absolute; width:28px; height:33px; background:url(pin.png) 0px 0px; }
+.smartArea .active { background-position:-28px 0px; }
+.smartArea .gPin { background-position:0px -31px; }
+.smartArea .gPin.active { background-position:-28px -33px; }
+.smartArea .nPin { background-position:0px -66px; }
+.smartArea .nPin.active { background-position:-28px -66px; }
+.smartArea .bPin { background-position:0px -99px; }
+.smartArea .bPin.active { background-position:-28px -99px; }

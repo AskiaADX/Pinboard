@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<control xmlns="http://www.askia.com/ADCSchema"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.askia.com/ADCSchema http://www.askia.com/Downloads/dev/schemas/adc2.0/Config.xsd"
+         version="2.0.0"
+         askiaCompat="5.3.3">
+  <info>
+    <name>adc2-pinboard</name>
+    <fileName>adc2-pinboard</fileName>
+    <guid>c2a3920b-e1fa-4c75-98fd-ee438552c23e</guid>
+    <version>1.0.0</version>
+    <date>2015-11-27</date>
+    <description>
+      <![CDATA[
+        Describe your ADC here
+        
+        Tested in:
+          List the browsers name and version where the ADC should work on.
+          
+        Dependencies:
+          - Name of the 3rd party resource. Version. URL 
+          - Name of the 3rd party resource. Version. URL
+        
+        Notes:
+          Special notes about incompatibility or warnings
+      ]]>
+    </description>
+    <author>
+      <![CDATA[
+        Author1 <author1@email.com>, 
+        Author2 <author2@email.com>
+      ]]>
+    </author>
+    <company>Company name</company>
+    <helpURL></helpURL>
+    <site></site>
+    <categories>
+      <category>General</category>
+    </categories>
+    <style width="400" height="300"/>
+    <constraints>
+      <constraint on="questions" single="true" multiple="true" numeric="true" date="true" open="true" />
+      <constraint on="controls" responseblock="true" />
+    </constraints>
+  </info>
+
+  <outputs defaultOutput="fallback">
+  	<output id="standard">
+      <description><![CDATA[Output when the browser support Javascript]]></description>
+      <condition><![CDATA[Browser.Support("javascript")]]></condition>
+      <content fileName="pinboard.css" type="css" mode="static" position="head" />
+	  <content fileName="standard.css" type="css" mode="dynamic" position="head" />
+	  <content fileName="standard.html" type="html" mode="dynamic" position="placeholder" />
+	  <content fileName="standard_open.html" type="html" mode="dynamic" position="none" />
+      <content fileName="es5-shim.min.js" type="javascript" mode="share" position="head">
+        <yield>
+          <![CDATA[
+          <!--[if lt IE 10]>
+            <script type="text/javascript" src="{%= CurrentADC.URLTo("share/es5-shim.min.js") %}"></script>
+          <![endif]-->
+          ]]>
+        </yield>
+      </content>
+      <content fileName="jquery-1.11.3.min.js" type="javascript" mode="share" position="head"/>
+	  <content fileName="jquery-ui.min.js" type="javascript" mode="share" position="head"/>
+	  <content fileName="jquery.ui.touch-punch.min.js" type="javascript" mode="share" position="head"/>
+      <content fileName="pinboard.js" type="javascript" mode="static" position="head"/>
+	  <content fileName="standard.js" type="javascript" mode="dynamic" position="foot" />
+	  <content fileName="standard_open.js" type="javascript" mode="dynamic" position="none" />
+	  <content fileName="sprite.png" type="image" mode="static" position="none" />
+	  <content fileName="pin.png" type="image" mode="static" position="none" />
+	  <content fileName="bin.png" type="image" mode="static" position="none" />
+	  <content fileName="cross.png" type="image" mode="static" position="none" />
+	  <content fileName="tick.png" type="image" mode="static" position="none" />
+    </output>
+    <output id="fallback">
+      <description><![CDATA[Fallback when the browser does not support Javascript]]></description>
+      <condition><![CDATA[Not(Browser.Support("javascript"))]]></condition>
+      <content fileName="open.html" type="html" mode="dynamic" position="none" />
+      
+      <content fileName="default.html" type="html" mode="dynamic" position="placeholder" />
+    </output>
+  </outputs>
+
+  <properties>
+
+    <category id="general" name="General">
+      <property xsi:type="standardProperty" id="placeholder" name="Placeholder" type="string" mode="dynamic">
+        <description>
+          <![CDATA[
+          Using HTML 5, in modern browser.
+          Helper text shows in the input when it is empty.
+        ]]>
+        </description>
+        <value></value>
+      </property>
+	  <property xsi:type="standardProperty" id="fontSize" name="Font Size" type="string" mode="static">
+        <description>
+          <![CDATA[The font size for the control]]>
+        </description>
+        <value>14px</value>
+      </property>
+      <property xsi:type="standardProperty" id="controlWidth" name="Control Width" type="string" mode="static">
+        <description>
+          <![CDATA[The width of the control]]>
+        </description>
+        <value>100%</value>
+      </property>
+      <property xsi:type="standardProperty" id="maxWidth" name="Max Width" type="string" mode="static">
+        <description>
+          <![CDATA[The maximum width of the control]]>
+        </description>
+        <value>100%</value>
+      </property>
+	  <property xsi:type="standardProperty" id="controlAlign" name="Control Alignment" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The alignment of the control
+	        ]]>
+        </description>
+        <value>left</value>
+        <options>
+          <option value="left" text="Left"/>
+          <option value="center" text="Center"/>
+          <option value="right" text="Right"/>
+        </options>
+      </property>
+    </category>
+	<category id="image" name="Image">
+		<property xsi:type="standardProperty" id="imagePath" name="Image Path" type="string" mode="static">
+        <description>
+          <![CDATA[Path and filename of image to be used]]>
+        </description>
+        <value></value>
+      </property>
+	</category>
+	<category id="popup" name="Popup">
+		<property xsi:type="standardProperty" id="popupQText" name="Popup Question Text" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The question text that displays in the popup
+	        ]]>
+        </description>
+        <value>What do you think?</value>
+      </property>
+		<property xsi:type="standardProperty" id="popupColourPrimary" name="Popup Colour Primary" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Primary colour of the popup
+          ]]>
+        </description>
+        <value>31,31,31</value>
+      </property>
+      <property xsi:type="standardProperty" id="popupColourSecondary" name="Popup Colour Secondary" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Secondary colour of the popup
+          ]]>
+        </description>
+        <value>31,31,31</value>
+      </property>
+	  <property xsi:type="standardProperty" id="fontColour" name="Popup Font Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Font colour
+          ]]>
+        </description>
+        <value>255,255,255</value>
+      </property>
+	  <property xsi:type="standardProperty" id="popupBorderColour" name="Popup Border Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Border colour
+          ]]>
+        </description>
+        <value>78,78,110</value>
+      </property>
+	  <property xsi:type="standardProperty" id="popupBorderRadius" name="Border Radius" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The amount of curve on the popup corners
+	        ]]>
+        </description>
+        <value>22px</value>
+        <options>
+          <option value="0px" text="0"/>
+		  <option value="2px" text="2"/>
+          <option value="5px" text="5"/>
+          <option value="10px" text="10"/>
+		  <option value="15px" text="15"/>
+		  <option value="20px" text="20"/>
+		  <option value="22px" text="22"/>
+		  <option value="25px" text="25"/>
+		  <option value="30px" text="30"/>
+        </options>
+      </property>
+	  <property xsi:type="standardProperty" id="popupBorderThickness" name="Popup Border Thickness" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The thickness of the border around the popup
+	        ]]>
+        </description>
+        <value>1px</value>
+        <options>
+          <option value="none" text="None"/>
+          <option value="1px" text="1px"/>
+		  <option value="2px" text="2px"/>
+		  <option value="3px" text="3px"/>
+		  <option value="4px" text="4px"/>
+		  <option value="5px" text="5px"/>
+        </options>
+      </property>
+	  <property xsi:type="standardProperty" id="popupBorderStyle" name="Popup Border Style" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The style of the border around the popup
+	        ]]>
+        </description>
+        <value>solid</value>
+        <options>
+		  <option value="none" text="None"/>
+          <option value="solid" text="Solid"/>
+          <option value="dashed" text="Dashed"/>
+		  <option value="dotted" text="Dotted"/>
+		  <option value="double" text="Double"/>
+        </options>
+      </property>
+	  <property xsi:type="standardProperty" id="popupShadow" name="Popup Drop Shadow" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The visibility of a dropshadow under the popup
+	        ]]>
+        </description>
+        <value>none</value>
+        <options>
+          <option value="0 2px 3px 0 rgba(0,0,0,0.75)" text="On"/>
+          <option value="none" text="Off"/>
+        </options>
+      </property>
+	  <property xsi:type="standardProperty" id="buttonBgColour" name="Button BG Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Border colour
+          ]]>
+        </description>
+        <value>78,78,110</value>
+      </property>
+	  <property xsi:type="standardProperty" id="buttonBorderRadius" name="Button Border Radius" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The amount of curve on the popup corners
+	        ]]>
+        </description>
+        <value>100%</value>
+        <options>
+          <option value="0%" text="0%"/>
+		  <option value="25%" text="25%"/>
+		  <option value="50%" text="50%"/>
+		  <option value="75%" text="75%"/>
+		  <option value="100%" text="100%"/>
+        </options>
+      </property>
+    </category>
+  </properties>
+</control>

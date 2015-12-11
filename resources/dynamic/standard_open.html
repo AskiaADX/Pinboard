@@ -1,0 +1,40 @@
+﻿{% 
+Dim inputName  =  CurrentQuestion.InputName()
+Dim inputValue =  CurrentQuestion.InputValue()
+Dim inputId
+
+Dim placeholder = CurrentADC.PropValue("placeholder")
+Dim attrPlaceholder = On(placeholder <> "", "placeholder=\"" + placeholder + "\"", "")
+
+Dim arr = CurrentQuestion.ParentLoop.ParentLoop.AvailableResponses
+Dim ar = CurrentQuestion.ParentLoop.AvailableResponses
+Dim i
+Dim j
+For i = 1 To arr.Count
+    inputName = CurrentQuestion.Iteration(ar[1].Index,arr[i].Index).InputName()
+    inputId   = inputName
+    inputValue = CurrentQuestion.Iteration(ar[1].Index,arr[i].Index).InputValue()
+%}
+<input type="hidden" id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}"  />
+{%
+    inputName = CurrentQuestion.Iteration(ar[2].Index,arr[i].Index).InputName()
+    inputId   = inputName
+    inputValue = CurrentQuestion.Iteration(ar[2].Index,arr[i].Index).InputValue()
+%}
+<input type="hidden" id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}"  />
+{%
+    inputName = CurrentQuestion.Iteration(ar[3].Index,arr[i].Index).InputName()
+    inputId   = inputName
+    inputValue = CurrentQuestion.Iteration(ar[3].Index,arr[i].Index).InputValue()
+%}
+<input type="hidden" id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}"  />
+{%
+    inputName = CurrentQuestion.Iteration(ar[4].Index,arr[i].Index).InputName()
+    inputId   = inputName
+    inputValue = CurrentQuestion.Iteration(ar[4].Index,arr[i].Index).InputValue()
+%}
+<input type="hidden"  id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}"  />
+{% Next %}
+<div class="smartBoard">
+	<img class="smartBG" src="{%= CurrentADC.PropValue("imagePath") %}" />
+</div>

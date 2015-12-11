@@ -1,0 +1,90 @@
+﻿/* standard.css */
+{%
+Dim fontSize =CurrentADC.PropValue("fontSize")
+
+Dim popupColourPrimary =CurrentADC.PropValue("popupColourPrimary")
+Dim popupColourSecondary =CurrentADC.PropValue("popupColourSecondary")
+Dim fontColour =CurrentADC.PropValue("fontColour")
+Dim popupShadow =CurrentADC.PropValue("popupShadow")
+Dim popupBorderColour =CurrentADC.PropValue("popupBorderColour")
+Dim popupBorderThickness =CurrentADC.PropValue("popupBorderThickness")
+Dim popupBorderStyle =CurrentADC.PropValue("popupBorderStyle")
+Dim popupBorderRadius =CurrentADC.PropValue("popupBorderRadius")
+Dim buttonBgColour =CurrentADC.PropValue("buttonBgColour")
+Dim buttonBorderRadius =CurrentADC.PropValue("buttonBorderRadius")
+%}
+
+/* General */
+#adc_{%= CurrentADC.InstanceId%} { 
+
+}
+
+/* General */
+#adc_{%= CurrentADC.InstanceId%} .smartBoard { 
+	display:block;
+	position:relative;
+}
+
+#adc_{%= CurrentADC.InstanceId%} .smartNote { 
+
+	box-sizing:border-box;
+	
+	{% IF popupBorderThickness = "none" Then %}
+		border: none;
+	{% Else %}
+		border: {%= popupBorderThickness%} {%= popupBorderStyle%} rgb({%= popupBorderColour%});
+	{% EndIF %}	
+	
+	background: rgb({%= popupColourPrimary%}); 
+	background: -moz-linear-gradient(top,  rgb({%= popupColourPrimary%}) 0%, rgb({%= popupColourSecondary%}) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb({%= popupColourPrimary%})), color-stop(100%,rgb({%= popupColourSecondary%}))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgb({%= popupColourPrimary%}) 0%,rgb({%= popupColourSecondary%}) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgb({%= popupColourPrimary%}) 0%,rgb({%= popupColourSecondary%}) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgb({%= popupColourPrimary%}) 0%,rgb({%= popupColourSecondary%}) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgb({%= popupColourPrimary%}) 0%,rgb({%= popupColourSecondary%}) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr={%= popupColourPrimary.ToHexa()%}, endColorstr={%= popupColourSecondary.ToHexa()%},GradientType=0 ); /* IE6-8 */
+	
+	-webkit-border-radius:	{%= popupBorderRadius%}; 
+	-moz-border-radius:		{%= popupBorderRadius%}; 
+	-khtml-border-radius:	{%= popupBorderRadius%}; 
+	border-radius:			{%= popupBorderRadius%};
+	
+	-webkit-box-shadow: {%= popupShadow%};
+	-moz-box-shadow: {%= popupShadow%};
+	box-shadow: {%= popupShadow%};
+	
+}
+
+#adc_{%= CurrentADC.InstanceId%} .smartNote p { 
+	font-size:{%= fontSize%};
+	color:rgb({%= fontColour%});
+}
+
+#adc_{%= CurrentADC.InstanceId%} .smartNote textarea { 
+	box-sizing:border-box;
+}
+
+#adc_{%= CurrentADC.InstanceId%} .smartNote .closeNote, #adc_{%= CurrentADC.InstanceId%} .smartNote .confirmNote, #adc_{%= CurrentADC.InstanceId%} .smartNote .deleteNote {
+	-webkit-border-radius:{%= buttonBorderRadius%};
+	-moz-border-radius:{%= buttonBorderRadius%};
+	background-color:rgb({%= buttonBgColour%}); 
+	border-radius:{%= buttonBorderRadius%};
+	border-color:rgb({%= buttonBgColour%});
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .closeNote:hover, #adc_{%= CurrentADC.InstanceId%} .smartNote .deleteNote:hover {
+	background-color:#A50706; border-color:#A50706;
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .confirmNote:hover {
+	background-color:#44d106; border-color:#44d106;
+}
+
+#adc_{%= CurrentADC.InstanceId%} .smartNote .goodVibe, #adc_{%= CurrentADC.InstanceId%} .smartNote .neutralVibe, #adc_{%= CurrentADC.InstanceId%} .smartNote .badVibe { 
+	-webkit-border-radius:{%= buttonBorderRadius%};
+	-moz-border-radius:{%= buttonBorderRadius%};
+	border-radius:{%= buttonBorderRadius%};
+	background-color:rgb({%= buttonBgColour%}); 
+	border-color:rgb({%= buttonBgColour%});
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .goodVibe.active { background-position:-2px -33px; background-color:#6EEA0F; border-color:#6EEA0F; }
+#adc_{%= CurrentADC.InstanceId%} .smartNote .neutralVibe.active { background-position:-33px -33px; background-color:#FFEB00; border-color:#FFEB00; }
+#adc_{%= CurrentADC.InstanceId%} .smartNote .badVibe.active { background-position:-64px -33px; background-color:#FF0000; border-color:#FF0000; }

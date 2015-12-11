@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<testCases xmlns="http://www.askia.com/ADCUnitTestSchema"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.askia.com/ADCUnitTestSchema ../../../UnitTests.xsd">
+
+  <cases id="fallback_chapter" description="fallback with chapter">
+    <case description="fallback with chapter" fixture="chapter.xml">
+      <arrange>
+        <output id="fallback"/>
+      </arrange>
+      <asserts>
+        <assert_output id="fallback"/>
+      </asserts>
+    </case>
+  </cases>
+
+  <cases id="fallback_numeric" description="fallback with numeric">
+    <case description="fallback with numeric" fixture="numeric.xml">
+      <arrange>
+        <output id="fallback"/>
+      </arrange>
+      <asserts>
+        <assert_output id="fallback"/>
+      </asserts>
+    </case>
+  </cases>
+
+  <cases id="fallback_open" description="fallback with open">
+    <case description="fallback with open" fixture="open.xml">
+      <arrange>
+        <output id="fallback"/>
+      </arrange>
+      <asserts>
+        <assert_output id="fallback"/>
+      </asserts>
+    </case>
+  </cases>
+
+  <cases id="fallback_single" description="fallback with single">
+    <case description="fallback with single" fixture="single.xml">
+      <arrange>
+        <output id="fallback"/>
+      </arrange>
+      <asserts>
+        <assert_output id="fallback"/>
+      </asserts>
+    </case>
+  </cases>
+
+  <cases id="fallback_multiple" description="fallback with multiple">
+    <case description="fallback with multiple" fixture="multiple.xml">
+      <arrange>
+        <output id="fallback"/>
+      </arrange>
+      <asserts>
+        <assert_output id="fallback"/>
+      </asserts>
+    </case>
+  </cases>
+
+  <cases id="fallback_datetime" description="fallback with datetime">
+    <case description="fallback with single" fixture="datetime.xml">
+      <arrange>
+        <output id="fallback"/>
+      </arrange>
+      <asserts>
+        <assert_output id="fallback"/>
+      </asserts>
+    </case>
+  </cases>
+
+  <cases id="fallback_date" description="fallback with date">
+    <case description="fallback with date" fixture="date.xml">
+      <arrange>
+        <output id="fallback"/>
+      </arrange>
+      <asserts>
+        <assert_output id="fallback"/>
+      </asserts>
+    </case>
+  </cases>
+
+  <cases id="fallback_time" description="fallback with time">
+    <case description="fallback with time" fixture="time.xml">
+      <arrange>
+        <output id="fallback"/>
+      </arrange>
+      <asserts>
+        <assert_output id="fallback"/>
+      </asserts>
+    </case>
+  </cases>
+
+
+  <cases id="chapter" description="All outputs with chapter" cases="fallback_chapter" />
+  <cases id="numeric" description="All outputs with numeric question" cases="fallback_numeric" />
+  <cases id="open" description="All outputs with open-ended question" cases="fallback_open" />
+  <cases id="single" description="All outputs with single question" cases="fallback_single" />
+  <cases id="multiple" description="All outputs with multiple question" cases="fallback_multiple" />
+  <cases id="datetime" description="All outputs with date-time question" cases="fallback_datetime" />
+  <cases id="date" description="All outputs with date question" cases="fallback_date" />
+  <cases id="time" description="All outputs with time question" cases="fallback_time" />
+  
+  <cases id="fallback" description="All fallback outputs" cases="fallback_chapter, fallback_numeric, fallback_open, fallback_single, fallback_multiple, fallback_datetime, fallback_date, fallback_time" />
+  
+  <cases id="all" description="All outputs with all questions" cases="fallback" />
+
+</testCases>

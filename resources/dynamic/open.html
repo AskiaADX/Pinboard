@@ -1,0 +1,70 @@
+﻿<!-- fallback_numeric.html -->
+<table cellpadding="5" cellspacing="0" border="0">
+{%
+Dim inputId
+Dim inputName
+Dim inputValue
+Dim rcaption
+Dim resource
+Dim alt = ""
+Dim minValue
+Dim maxValue
+
+Dim arr = CurrentQuestion.ParentLoop.ParentLoop.AvailableResponses
+Dim ar = CurrentQuestion.ParentLoop.AvailableResponses
+Dim i
+Dim j
+%}
+<tr><td></td>
+{%
+For j = 1 To ar.Count
+	rcaption  = ar[j].Caption
+%}
+	<td align="center"><p>{%:= rcaption %}</p></td>
+{% Next %}
+</tr>
+{%
+For i = 1 To arr.Count
+	rcaption  = arr[i].Caption
+    resource = arr.ResourceURL[i]
+    
+%}
+<tr class="{%= alt %}">
+	<td align="left">
+		{% IF (resource <> "") Then %}
+			<img src="{%= resource %}" />
+		{% EndIf %}
+        {% 
+            IF (alt = "") Then alt = "alt"
+            Else alt = "" 
+            EndIf
+        %}
+    	<p>{%:= rcaption %}</p>
+	</td>
+    {% 
+    inputName = CurrentQuestion.Iteration(ar[1].Index,arr[i].Index).InputName()
+    inputId   = inputName
+    inputValue = CurrentQuestion.Iteration(ar[1].Index,arr[i].Index).InputValue()
+    %}
+	<td align="center"><input type="number" name="{%= inputName%}" id="{%= inputId %}" min="0" max="{%= arr.Count %}" value="{%= inputValue %}" /></td>
+    {%
+    inputName = CurrentQuestion.Iteration(ar[2].Index,arr[i].Index).InputName()
+    inputId   = inputName
+    inputValue = CurrentQuestion.Iteration(ar[2].Index,arr[i].Index).InputValue()
+   	%}
+    <td align="center"><input type="number" name="{%= inputName%}" id="{%= inputId %}" min="0" max="{%= arr.Count %}" value="{%= inputValue %}" /></td>
+    {%
+    inputName = CurrentQuestion.Iteration(ar[3].Index,arr[i].Index).InputName()
+    inputId   = inputName
+    inputValue = CurrentQuestion.Iteration(ar[3].Index,arr[i].Index).InputValue()
+   	%}
+    <td align="center"><input type="number" name="{%= inputName%}" id="{%= inputId %}" min="0" max="{%= arr.Count %}" value="{%= inputValue %}" /></td>
+    {%
+    inputName = CurrentQuestion.Iteration(ar[4].Index,arr[i].Index).InputName()
+    inputId   = inputName
+    inputValue = CurrentQuestion.Iteration(ar[4].Index,arr[i].Index).InputValue()
+   	%}
+    <td align="center"><input type="number" name="{%= inputName%}" id="{%= inputId %}" min="0" max="{%= arr.Count %}" value="{%= inputValue %}" /></td>
+</tr>
+{% Next %}
+</table>
