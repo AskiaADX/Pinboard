@@ -53,7 +53,7 @@
 .smartNote .goodVibe.active { background-position:-2px -33px; background-color:#6EEA0F; border-color:#6EEA0F; }
 .smartNote .neutralVibe.active { background-position:-33px -33px; background-color:#FFEB00; border-color:#FFEB00; }
 .smartNote .badVibe.active { background-position:-64px -33px; background-color:#FF0000; border-color:#FF0000; }
-.smartArea { cursor:crosshair; }
+.smartArea { cursor:crosshair; background:url(pixel.png) repeat top left; }
 .smartArea .pin { display:block; position:absolute; width:28px; height:33px; background:url(pin.png) 0px 0px; }
 .smartArea .active { background-position:-28px 0px; }
 .smartArea .gPin { background-position:0px -31px; }

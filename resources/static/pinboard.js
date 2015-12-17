@@ -37,6 +37,7 @@
 		(options.width = options.width || 400);
 		(options.height = options.height || "auto");
 		(options.loading = options.loading || 'Loading $prct'); // remove
+		(options.showCounter = options.showCounter || false);
 				
 		$(this).css({'max-width':options.maxWidth,'width':options.controlWidth});
 		$(this).parents('.controlContainer').css({'width':'100%'});
@@ -81,7 +82,8 @@
 			images_loaded = 0,
 			resizedWidth = 0,
 			resizedHeight = 0,
-			ratio = 1;
+			ratio = 1,
+			showCounter = options.showCounter;
 			
 		var imgLoad = $("<img />");
 			imgLoad.attr("src", imagePath + "?" + new Date().getTime());
@@ -116,6 +118,7 @@
 		
 		function init() {
 			
+			if ( showCounter ) $('.counterNumber').text( items.length/4 );
 									
 			// Check if response already has a value
 			
@@ -246,6 +249,9 @@
 				});
 				
 				$('.smartNote .confirmNote').click(function(e) {
+					
+					$('.counterNumber').text( parseInt($('.counterNumber').text())-1 );
+					
 					e.stopImmediatePropagation();
 					
 					var feeling = $(this).parents('.smartNote').data('feeling'),
@@ -343,6 +349,8 @@
 					ratioY = areaHeight/resizedHeight;
 					
 				if ( pinComment !== '' ) {
+					
+					$('.counterNumber').text( parseInt($('.counterNumber').text())-1 );
 						
 					var offsetParent = $('.smartBoard').offset(),
 						xCoordParent = ((pinX + $('.smartArea').offset().left )- offsetParent.left),

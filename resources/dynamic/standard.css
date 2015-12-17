@@ -12,6 +12,16 @@ Dim popupBorderStyle =CurrentADC.PropValue("popupBorderStyle")
 Dim popupBorderRadius =CurrentADC.PropValue("popupBorderRadius")
 Dim buttonBgColour =CurrentADC.PropValue("buttonBgColour")
 Dim buttonBorderRadius =CurrentADC.PropValue("buttonBorderRadius")
+
+Dim counterPosition =CurrentADC.PropValue("counterPosition")
+Dim counterBorderColour =CurrentADC.PropValue("counterBorderColour")
+Dim counterBorderRadius =CurrentADC.PropValue("counterBorderRadius")
+Dim counterBorderWidth =CurrentADC.PropValue("counterBorderWidth")
+Dim counterPrimaryColour =CurrentADC.PropValue("counterPrimaryColour")
+Dim counterSecondaryColour =CurrentADC.PropValue("counterSecondaryColour")
+Dim counterFontColour =CurrentADC.PropValue("counterFontColour")
+Dim counterDropShadow =CurrentADC.PropValue("counterDropShadow")
+Dim counterAlign =CurrentADC.PropValue("counterAlign")
 %}
 
 /* General */
@@ -42,7 +52,7 @@ Dim buttonBorderRadius =CurrentADC.PropValue("buttonBorderRadius")
 	background: -o-linear-gradient(top,  rgb({%= popupColourPrimary%}) 0%,rgb({%= popupColourSecondary%}) 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  rgb({%= popupColourPrimary%}) 0%,rgb({%= popupColourSecondary%}) 100%); /* IE10+ */
 	background: linear-gradient(to bottom,  rgb({%= popupColourPrimary%}) 0%,rgb({%= popupColourSecondary%}) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr={%= popupColourPrimary.ToHexa()%}, endColorstr={%= popupColourSecondary.ToHexa()%},GradientType=0 ); /* IE6-8 */
+	/*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr={%= popupColourPrimary.ToHexa()%}, endColorstr={%= popupColourSecondary.ToHexa()%},GradientType=0 );*/ /* IE6-8 */
 	
 	-webkit-border-radius:	{%= popupBorderRadius%}; 
 	-moz-border-radius:		{%= popupBorderRadius%}; 
@@ -88,3 +98,44 @@ Dim buttonBorderRadius =CurrentADC.PropValue("buttonBorderRadius")
 #adc_{%= CurrentADC.InstanceId%} .smartNote .goodVibe.active { background-position:-2px -33px; background-color:#6EEA0F; border-color:#6EEA0F; }
 #adc_{%= CurrentADC.InstanceId%} .smartNote .neutralVibe.active { background-position:-33px -33px; background-color:#FFEB00; border-color:#FFEB00; }
 #adc_{%= CurrentADC.InstanceId%} .smartNote .badVibe.active { background-position:-64px -33px; background-color:#FF0000; border-color:#FF0000; }
+
+/* Counter */
+#adc_{%= CurrentADC.InstanceId%} .counterContainer { 
+	text-align:{%= counterAlign%}; 
+	position:absolute;
+	{% IF CurrentADC.PropValue("counterPosition") = "top left" Then %}
+		top:0px; left:0px;
+	{% ElseIf CurrentADC.PropValue("counterPosition") = "top right" Then %}
+		top:0px; right:0px;
+	{% ElseIf CurrentADC.PropValue("counterPosition") = "bottom left" Then %}
+		bottom:0px; left:0px;
+	{% ElseIf CurrentADC.PropValue("counterPosition") = "bottom right" Then %}
+		bottom:0px; right:0px;
+	{% EndIF %}	
+}
+#adc_{%= CurrentADC.InstanceId%} .counter { 
+	{% IF CurrentADC.PropValue("counterBorderWidth") = "none" Then %}
+		border: none;
+	{% Else %}
+		border: {%= counterBorderWidth%} solid rgb({%= counterBorderColour%});
+	{% EndIF %}	
+	background: rgb({%= counterPrimaryColour%}); 
+	background: -moz-linear-gradient(top,  rgb({%= counterPrimaryColour%}) 0%, rgb({%= counterSecondaryColour%}) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb({%= counterPrimaryColour%})), color-stop(100%,rgb({%= counterSecondaryColour%}))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgb({%= counterPrimaryColour%}) 0%,rgb({%= counterSecondaryColour%}) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgb({%= counterPrimaryColour%}) 0%,rgb({%= counterSecondaryColour%}) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgb({%= counterPrimaryColour%}) 0%,rgb({%= counterSecondaryColour%}) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgb({%= counterPrimaryColour%}) 0%,rgb({%= counterSecondaryColour%}) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr={%= counterPrimaryColour.ToHexa()%}, endColorstr={%= counterSecondaryColour.ToHexa()%},GradientType=0 ); /* IE6-8 */
+	
+	display:inline-block; 
+	border-radius:{%= counterBorderRadius%}; 
+	margin:5px; 
+	width:30px; 
+	height:30px;
+	
+	-webkit-box-shadow: {%= counterDropShadow%};
+	-moz-box-shadow: {%= counterDropShadow%};
+	box-shadow: {%= counterDropShadow%};
+}
+#adc_{%= CurrentADC.InstanceId%} .counterNumber { padding:25%; text-align:center; margin:0px auto; color:rgb({%= counterFontColour%}); }

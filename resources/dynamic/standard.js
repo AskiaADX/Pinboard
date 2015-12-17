@@ -7,6 +7,7 @@ $(window).load(function() {
 		controlAlign : '{%= CurrentADC.PropValue("controlAlign") %}',
 		imagePath : '{%= CurrentADC.PropValue("imagePath") %}',
 		popupQText : '{%= CurrentADC.PropValue("popupQText") %}',
+		showCounter : {%= (CurrentADC.PropValue("showCounter") = "1") %},
 		items : [
 			{%:= CurrentADC.GetContent("dynamic/standard_open.js").ToText()%}
 		]

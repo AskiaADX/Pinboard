@@ -15,26 +15,29 @@ For i = 1 To arr.Count
     inputId   = inputName
     inputValue = CurrentQuestion.Iteration(ar[1].Index,arr[i].Index).InputValue()
 %}
-<input type="hidden" id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}"  />
+<input type="hidden" id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}" />
 {%
     inputName = CurrentQuestion.Iteration(ar[2].Index,arr[i].Index).InputName()
     inputId   = inputName
     inputValue = CurrentQuestion.Iteration(ar[2].Index,arr[i].Index).InputValue()
 %}
-<input type="hidden" id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}"  />
+<input type="hidden" id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}" />
 {%
     inputName = CurrentQuestion.Iteration(ar[3].Index,arr[i].Index).InputName()
     inputId   = inputName
     inputValue = CurrentQuestion.Iteration(ar[3].Index,arr[i].Index).InputValue()
 %}
-<input type="hidden" id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}"  />
+<input type="hidden" id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}" />
 {%
     inputName = CurrentQuestion.Iteration(ar[4].Index,arr[i].Index).InputName()
     inputId   = inputName
     inputValue = CurrentQuestion.Iteration(ar[4].Index,arr[i].Index).InputValue()
 %}
-<input type="hidden"  id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}"  />
+<input type="hidden"  id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}" />
 {% Next %}
 <div class="smartBoard">
+	{% IF CurrentADC.PropValue("showCounter") = "1" Then %}
+		<div class="counterContainer" unselectable='on' onselectstart='return false;' onmousedown='return false;'><div class="counter"><div class="counterNumber"></div></div></div>
+	{% EndIF %}
 	<img class="smartBG" src="{%= CurrentADC.PropValue("imagePath") %}" />
 </div>

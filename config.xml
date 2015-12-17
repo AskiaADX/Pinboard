@@ -68,6 +68,7 @@
 	  <content fileName="standard.js" type="javascript" mode="dynamic" position="foot" />
 	  <content fileName="standard_open.js" type="javascript" mode="dynamic" position="none" />
 	  <content fileName="sprite.png" type="image" mode="static" position="none" />
+	  <content fileName="pixel.png" type="image" mode="static" position="none" />
 	  <content fileName="pin.png" type="image" mode="static" position="none" />
 	  <content fileName="bin.png" type="image" mode="static" position="none" />
 	  <content fileName="cross.png" type="image" mode="static" position="none" />
@@ -261,5 +262,138 @@
         </options>
       </property>
     </category>
+	<category id="counter" name="Counter">
+	  <property xsi:type="standardProperty" id="showCounter" name="Show Counter" type="boolean" mode="static">
+        <description>
+          <![CDATA[
+	          Show counter at the top of the control
+			]]>
+        </description>
+        <value>false</value>
+      </property>
+	  <property xsi:type="standardProperty" id="counterPosition" name="Counter Position" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          Set position for counter
+	        ]]>
+        </description>
+        <value>top left</value>
+		<options>
+          <option value="top left" text="Top Left"/>
+          <option value="top right" text="Top Right"/>
+		  <option value="bottom left" text="Bottom Left"/>
+          <option value="bottom right" text="Bottom Right"/>
+        </options>
+      </property>
+	  <property xsi:type="standardProperty" id="countDirection" name="Count Direction" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          Set count direction for counter
+	        ]]>
+        </description>
+        <value>count down</value>
+		<options>
+          <option value="count down" text="Count Down"/>
+          <option value="count up" text="Count Up"/>
+        </options>
+      </property>
+	  <property xsi:type="standardProperty" id="counterBorderColour" name="Counter Border Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Border colour of counter
+          ]]>
+        </description>
+        <value>161,167,173</value>
+      </property>
+	  <property xsi:type="standardProperty" id="counterBorderRadius" name="Counter Border Radius" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The amount of curve on the counter
+	        ]]>
+        </description>
+        <value>30px</value>
+        <options>
+          <option value="0px" text="0"/>
+		  <option value="2px" text="2"/>
+          <option value="5px" text="5"/>
+          <option value="10px" text="10"/>
+		  <option value="15px" text="15"/>
+		  <option value="20px" text="20"/>
+		  <option value="25px" text="25"/>
+		  <option value="30px" text="30"/>
+        </options>
+      </property>
+	  <property xsi:type="standardProperty" id="counterBorderWidth" name="Counter Border Thickness" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The thickness of the border around the counter
+	        ]]>
+        </description>
+        <value>2px</value>
+        <options>
+          <option value="none" text="None"/>
+          <option value="1px" text="1px"/>
+		  <option value="2px" text="2px"/>
+		  <option value="3px" text="3px"/>
+		  <option value="4px" text="4px"/>
+		  <option value="5px" text="5px"/>
+        </options>
+      </property>
+	  <property xsi:type="standardProperty" id="counterPrimaryColour" name="Counter Primary Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Primary colour of the counter
+          ]]>
+        </description>
+        <value>247,247,247</value>
+      </property>
+	  <property xsi:type="standardProperty" id="counterSecondaryColour" name="Counter Secondary Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Secondary colour of the counter
+          ]]>
+        </description>
+        <value>247,247,247</value>
+      </property>
+	  <property xsi:type="standardProperty" id="counterPadding" name="Counter Padding" type="string" mode="static">
+        <description>
+          <![CDATA[PAdding around counter number]]>
+        </description>
+        <value>25%</value>
+      </property>
+	  <property xsi:type="standardProperty" id="counterFontColour" name="Counter Font Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Colour of the counter number
+          ]]>
+        </description>
+        <value>68,68,68</value>
+      </property>
+	  <property xsi:type="standardProperty" id="counterDropShadow" name="Counter Drop Shadow" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The visibility of a dropshadow under the statement
+	        ]]>
+        </description>
+        <value>none</value>
+        <options>
+          <option value="0 2px 3px 0 rgba(0,0,0,0.75)" text="On"/>
+          <option value="none" text="Off"/>
+        </options>
+      </property>
+	  <property xsi:type="standardProperty" id="counterAlign" name="Counter Align" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          Set position for counter
+	        ]]>
+        </description>
+        <value>right</value>
+		<options>
+          <option value="left" text="Left"/>
+          <option value="center" text="Center"/>
+		  <option value="right" text="Right"/>
+        </options>
+      </property>
+	</category>
   </properties>
 </control>
