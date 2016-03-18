@@ -1,4 +1,4 @@
-﻿/* standard.css */
+/* standard.css */
 {%
 Dim fontSize =CurrentADC.PropValue("fontSize")
 
@@ -11,7 +11,20 @@ Dim popupBorderThickness =CurrentADC.PropValue("popupBorderThickness")
 Dim popupBorderStyle =CurrentADC.PropValue("popupBorderStyle")
 Dim popupBorderRadius =CurrentADC.PropValue("popupBorderRadius")
 Dim buttonBgColour =CurrentADC.PropValue("buttonBgColour")
+Dim buttonBorderColour =CurrentADC.PropValue("buttonBorderColour")
 Dim buttonBorderRadius =CurrentADC.PropValue("buttonBorderRadius")
+Dim buttonBorderStyle =CurrentADC.PropValue("buttonBorderStyle")
+Dim buttonBorderThickness =CurrentADC.PropValue("buttonBorderThickness")
+Dim buttonIconColour =CurrentADC.PropValue("buttonIconColour")
+Dim closeButtonHoverBgColour =CurrentADC.PropValue("closeButtonHoverBgColour")
+Dim closeButtonHoverBorderColour =CurrentADC.PropValue("closeButtonHoverBorderColour")
+Dim closeButtonHoverIconColour =CurrentADC.PropValue("closeButtonHoverIconColour")
+Dim confirmButtonHoverBgColour =CurrentADC.PropValue("confirmButtonHoverBgColour")
+Dim confirmButtonHoverBorderColour =CurrentADC.PropValue("confirmButtonHoverBorderColour")
+Dim confirmButtonHoverIconColour =CurrentADC.PropValue("confirmButtonHoverIconColour")
+Dim deleteButtonHoverBgColour =CurrentADC.PropValue("deleteButtonHoverBgColour")
+Dim deleteButtonHoverBorderColour =CurrentADC.PropValue("deleteButtonHoverBorderColour")
+Dim deleteButtonHoverIconColour =CurrentADC.PropValue("deleteButtonHoverIconColour")
 
 Dim counterPosition =CurrentADC.PropValue("counterPosition")
 Dim counterBorderColour =CurrentADC.PropValue("counterBorderColour")
@@ -22,6 +35,38 @@ Dim counterSecondaryColour =CurrentADC.PropValue("counterSecondaryColour")
 Dim counterFontColour =CurrentADC.PropValue("counterFontColour")
 Dim counterDropShadow =CurrentADC.PropValue("counterDropShadow")
 Dim counterAlign =CurrentADC.PropValue("counterAlign")
+
+Dim commentBoxBorderColour =CurrentADC.PropValue("commentBoxBorderColour")
+Dim commentBoxBorderStyle =CurrentADC.PropValue("commentBoxBorderStyle")
+Dim commentBoxBorderThickness =CurrentADC.PropValue("commentBoxBorderThickness")
+
+Dim faceColour =CurrentADC.PropValue("faceColour")
+Dim selectedFaceColour =CurrentADC.PropValue("selectedFaceColour")
+Dim numberOfMoods =CurrentADC.PropValue("numberOfMoods")
+Dim singleMoodState =CurrentADC.PropValue("singleMoodState")
+
+Dim moodButtonBorderStyle =CurrentADC.PropValue("moodButtonBorderStyle")
+Dim moodButtonBorderThickness =CurrentADC.PropValue("moodButtonBorderThickness")
+
+Dim positiveBGColour =CurrentADC.PropValue("positiveBGColour")
+Dim positiveBorderColour =CurrentADC.PropValue("positiveBorderColour")
+Dim positiveHoverBGColour =CurrentADC.PropValue("positiveHoverBGColour")
+Dim positiveHoverBorderColour =CurrentADC.PropValue("positiveHoverBorderColour")
+Dim positiveSelectedBGColour =CurrentADC.PropValue("positiveSelectedBGColour")
+Dim positiveSelectedBorderColour =CurrentADC.PropValue("positiveSelectedBorderColour")
+Dim neutralBGColour =CurrentADC.PropValue("neutralBGColour")
+Dim neutralBorderColour =CurrentADC.PropValue("neutralBorderColour")
+Dim neutralHoverBGColour =CurrentADC.PropValue("neutralHoverBGColour")
+Dim neutralHoverBorderColour =CurrentADC.PropValue("neutralHoverBorderColour")
+Dim neutralSelectedBGColour =CurrentADC.PropValue("neutralSelectedBGColour")
+Dim neutralSelectedBorderColour =CurrentADC.PropValue("neutralSelectedBorderColour")
+Dim negativeBGColour =CurrentADC.PropValue("negativeBGColour")
+Dim negativeBorderColour =CurrentADC.PropValue("negativeBorderColour")
+Dim negativeHoverBGColour =CurrentADC.PropValue("negativeHoverBGColour")
+Dim negativeHoverBorderColour =CurrentADC.PropValue("negativeHoverBorderColour")
+Dim negativeSelectedBGColour =CurrentADC.PropValue("negativeSelectedBGColour")
+Dim negativeSelectedBorderColour =CurrentADC.PropValue("negativeSelectedBorderColour")
+
 %}
 
 /* General */
@@ -72,32 +117,133 @@ Dim counterAlign =CurrentADC.PropValue("counterAlign")
 
 #adc_{%= CurrentADC.InstanceId%} .smartNote textarea { 
 	box-sizing:border-box;
+    {% IF commentBoxBorderThickness = "none" Then %}
+		border: none;
+	{% Else %}
+    	border: {%= commentBoxBorderThickness%} {%= commentBoxBorderStyle%} rgb({%= commentBoxBorderColour%});
+	{% EndIF %}	
 }
 
-#adc_{%= CurrentADC.InstanceId%} .smartNote .closeNote, #adc_{%= CurrentADC.InstanceId%} .smartNote .confirmNote, #adc_{%= CurrentADC.InstanceId%} .smartNote .deleteNote {
+#adc_{%= CurrentADC.InstanceId%} .smartNote .closeNote, 
+#adc_{%= CurrentADC.InstanceId%} .smartNote .confirmNote, 
+#adc_{%= CurrentADC.InstanceId%} .smartNote .deleteNote {
 	-webkit-border-radius:{%= buttonBorderRadius%};
 	-moz-border-radius:{%= buttonBorderRadius%};
+    border-radius:{%= buttonBorderRadius%};
 	background-color:rgb({%= buttonBgColour%}); 
-	border-radius:{%= buttonBorderRadius%};
-	border-color:rgb({%= buttonBgColour%});
+    
+    {% IF popupBorderThickness = "none" Then %}
+		border: none;
+	{% Else %}
+    	border: {%= buttonBorderThickness%} {%= buttonBorderStyle%} rgb({%= buttonBorderColour%});
+	{% EndIF %}	
+    
 }
-#adc_{%= CurrentADC.InstanceId%} .smartNote .closeNote:hover, #adc_{%= CurrentADC.InstanceId%} .smartNote .deleteNote:hover {
-	background-color:#A50706; border-color:#A50706;
+#adc_{%= CurrentADC.InstanceId%} .smartNote .closeNote:hover {
+    background-color:rgb({%= closeButtonHoverBgColour%}); border-color:rgb({%= closeButtonHoverBorderColour%});
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .deleteNote:hover {
+    background-color:rgb({%= deleteButtonHoverBgColour%}); border-color:rgb({%= deleteButtonHoverBorderColour%});
 }
 #adc_{%= CurrentADC.InstanceId%} .smartNote .confirmNote:hover {
-	background-color:#44d106; border-color:#44d106;
+    background-color:rgb({%= confirmButtonHoverBgColour%}); border-color:rgb({%= confirmButtonHoverBorderColour%});
+}
+
+#adc_{%= CurrentADC.InstanceId%} .smartNote .goodVibe, #adc_{%= CurrentADC.InstanceId%} .smartNote .neutralVibe, #adc_{%= CurrentADC.InstanceId%} .smartNote .badVibe { 
+	{% IF numberOfMoods = "1" Then %}
+         display:none;
+    {% EndIF %}	
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .goodVibe i,
+#adc_{%= CurrentADC.InstanceId%} .smartNote .neutralVibe i,
+#adc_{%= CurrentADC.InstanceId%} .smartNote .badVibe i { 
+    color:rgb({%= faceColour%});
+    font-size:13px; line-height:32px; font-weight:normal; width:28px;
+}
+
+#adc_{%= CurrentADC.InstanceId%} .smartNote .goodVibe.active i,
+#adc_{%= CurrentADC.InstanceId%} .smartNote .neutralVibe.active i,
+#adc_{%= CurrentADC.InstanceId%} .smartNote .badVibe.active i,
+#adc_{%= CurrentADC.InstanceId%} .smartNote .goodVibe:hover i,
+#adc_{%= CurrentADC.InstanceId%} .smartNote .neutralVibe:hover i,
+#adc_{%= CurrentADC.InstanceId%} .smartNote .badVibe:hover i{ 
+    color:rgb({%= selectedFaceColour%});
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .closeNote i,
+#adc_{%= CurrentADC.InstanceId%} .smartNote .confirmNote i,
+#adc_{%= CurrentADC.InstanceId%} .smartNote .deleteNote i { 
+    color:rgb({%= buttonIconColour%});
+    font-size:20px; line-height:30px; font-weight:normal; width:22px;
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .confirmNote:hover i{ 
+    color:rgb({%= confirmButtonHoverIconColour%});
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .deleteNote:hover i{ 
+    color:rgb({%= deleteButtonHoverIconColour%});
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .closeNote:hover i{ 
+    color:rgb({%= closeButtonHoverIconColour%});
 }
 
 #adc_{%= CurrentADC.InstanceId%} .smartNote .goodVibe, #adc_{%= CurrentADC.InstanceId%} .smartNote .neutralVibe, #adc_{%= CurrentADC.InstanceId%} .smartNote .badVibe { 
 	-webkit-border-radius:{%= buttonBorderRadius%};
 	-moz-border-radius:{%= buttonBorderRadius%};
 	border-radius:{%= buttonBorderRadius%};
-	background-color:rgb({%= buttonBgColour%}); 
-	border-color:rgb({%= buttonBgColour%});
 }
-#adc_{%= CurrentADC.InstanceId%} .smartNote .goodVibe.active { background-position:-2px -33px; background-color:#6EEA0F; border-color:#6EEA0F; }
-#adc_{%= CurrentADC.InstanceId%} .smartNote .neutralVibe.active { background-position:-33px -33px; background-color:#FFEB00; border-color:#FFEB00; }
-#adc_{%= CurrentADC.InstanceId%} .smartNote .badVibe.active { background-position:-64px -33px; background-color:#FF0000; border-color:#FF0000; }
+#adc_{%= CurrentADC.InstanceId%} .smartNote .goodVibe {
+    background-color:rgb({%= positiveBGColour%});
+    {% IF moodButtonBorderThickness = "none" Then %}
+		border: none;
+	{% Else %}
+    	border: {%= moodButtonBorderThickness%} {%= moodButtonBorderStyle%} rgb({%= positiveBorderColour%});
+	{% EndIF %}	
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .neutralVibe { 
+    background-color:rgb({%= neutralBGColour%});
+    {% IF moodButtonBorderThickness = "none" Then %}
+		border: none;
+	{% Else %}
+    	border: {%= moodButtonBorderThickness%} {%= moodButtonBorderStyle%} rgb({%= neutralBorderColour%});
+	{% EndIF %}	
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .badVibe { 
+    background-color:rgb({%= negativeBGColour%});
+    {% IF moodButtonBorderThickness = "none" Then %}
+		border: none;
+	{% Else %}
+    	border: {%= moodButtonBorderThickness%} {%= moodButtonBorderStyle%} rgb({%= negativeBorderColour%});
+	{% EndIF %}	
+    
+    {% IF numberOfMoods = "2" Then %}
+         top:46px; left:5px;
+    {% EndIF %}	
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .goodVibe:hover { 
+    background-color:rgb({%= positiveHoverBGColour%});
+    border-color:rgb({%= positiveHoverBorderColour%});
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .neutralVibe:hover {
+    color:rgb({%= selectedFaceColour%});
+    background-color:rgb({%= neutralHoverBGColour%});
+    border-color:rgb({%= neutralHoverBorderColour%});
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .badVibe:hover { 
+    background-color:rgb({%= negativeHoverBGColour%});
+    border-color:rgb({%= negativeHoverBorderColour%});
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .goodVibe.active { 
+    background-color:rgb({%= positiveSelectedBGColour%});
+    border-color:rgb({%= positiveSelectedBorderColour%});
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .neutralVibe.active {
+    background-color:rgb({%= neutralSelectedBGColour%});
+    border-color:rgb({%= neutralSelectedBorderColour%});
+}
+#adc_{%= CurrentADC.InstanceId%} .smartNote .badVibe.active { 
+    background-color:rgb({%= negativeSelectedBGColour%});
+    border-color:rgb({%= negativeSelectedBorderColour%});
+}
+
 
 /* Counter */
 #adc_{%= CurrentADC.InstanceId%} .counterContainer { 

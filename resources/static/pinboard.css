@@ -1,6 +1,17 @@
 @charset "utf-8";
 /* CSS Document */
 
+@font-face {
+      font-family: 'fontello';
+      src: url('fontello.eot?87624894');
+      src: url('fontello.eot?87624894#iefix') format('embedded-opentype'),
+           url('fontello.woff?87624894') format('woff'),
+           url('fontello.ttf?87624894') format('truetype'),
+           url('fontello.svg?87624894#fontello') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
+
 .controlContainer { position:relative; }
 
 .clear { clear:both; }
@@ -27,9 +38,9 @@
 .smartNote .confirmNote:hover {
 	background-color:#44d106; border-color:#44d106;
 }
-.smartNote .closeNote   { width:20px; height:20px; background:url(cross.png) center no-repeat #4e4e6e; top:-10px; right:-10px; }
-.smartNote .confirmNote { width:30px; height:30px; background:url(tick.png) center no-repeat #4e4e6e; bottom:-15px; right:-15px; }
-.smartNote .deleteNote  { width:30px; height:30px; background:url(bin.png) center no-repeat #4e4e6e; bottom:-15px; right:25px; }
+.smartNote .closeNote   { width:30px; height:30px; background:#4e4e6e; top:-15px; right:-15px; }
+.smartNote .confirmNote { width:30px; height:30px; background:#4e4e6e; bottom:-15px; right:-15px; }
+.smartNote .deleteNote  { width:30px; height:30px; background:#4e4e6e; bottom:-15px; right:25px; }
 .smartNote textarea { position:absolute; top:50px; left:45px; width:240px; height:50px; resize:none; -webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px; border:2px solid #6e6e8e; }
 .smartNote p { 
 	position:absolute; top:10px; left:40px; padding:0px; margin:0px; width:250px; text-align:center;
@@ -39,20 +50,52 @@
 	font-weight:bold;
 }
 .goodVibe { 
-	display:block; width:27px; height:27px; position:absolute; top:5px; left:5px; -webkit-border-radius:100%; -moz-border-radius:100%; border-radius:100%;
-	background:url(sprite.png) -2px -1px no-repeat #4e4e6e; border:2px solid #4e4e6e;
+	display:block; width:34px; height:34px; position:absolute; top:5px; left:5px; -webkit-border-radius:100%; -moz-border-radius:100%; border-radius:100%;
+	/*background:url(sprite.png) -2px -1px no-repeat #4e4e6e; border:2px solid #4e4e6e;*/
 }
 .neutralVibe { 
-	display:block; width:27px; height:27px; position:absolute; top:40px; left:5px; -webkit-border-radius:100%; -moz-border-radius:100%; border-radius:100%;
-	background:url(sprite.png) -33px -1px no-repeat #4e4e6e;; border:2px solid #4e4e6e;
+	display:block; width:34px; height:34px; position:absolute; top:46px; left:5px; -webkit-border-radius:100%; -moz-border-radius:100%; border-radius:100%;
+	/*background:url(sprite.png) -33px -1px no-repeat #4e4e6e; border:2px solid #4e4e6e;*/
 }
 .badVibe { 
-	display:block; width:27px; height:27px; position:absolute; top:75px; left:5px; -webkit-border-radius:100%; -moz-border-radius:100%; border-radius:100%;
-	background:url(sprite.png) -64px -1px no-repeat #4e4e6e; border:2px solid #4e4e6e;
+	display:block; width:34px; height:34px; position:absolute; top:87px; left:5px; -webkit-border-radius:100%; -moz-border-radius:100%; border-radius:100%;
+	/*background:url(sprite.png) -64px -1px no-repeat #4e4e6e; border:2px solid #4e4e6e;*/
 }
-.smartNote .goodVibe.active { background-position:-2px -33px; background-color:#6EEA0F; border-color:#6EEA0F; }
+.goodVibe i, .neutralVibe i, .badVibe i, .closeNote i, .deleteNote i, .confirmNote i { 
+    pointer-events: none;
+    font-family: "fontello";
+      font-style: normal;
+      font-weight: normal;
+      speak: none;
+     
+      display: inline-block;
+      text-decoration: inherit;
+      width: 1em;
+      margin-right: .2em;
+      text-align: center;
+      /* opacity: .8; */
+     
+      /* For safety - reset parent styles, that can break glyph codes*/
+      font-variant: normal;
+      text-transform: none;
+     
+      /* fix buttons height, for twitter bootstrap */
+      line-height: 1em;
+     
+      /* Animation center compensation - margins should be symmetric */
+      /* remove if not needed */
+      margin-left: .2em;
+     
+      /* You can be more comfortable with increased icons size */
+      /* font-size: 120%; */
+     
+      /* Font smoothing. That was taken from TWBS */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+}
+/*.smartNote .goodVibe.active { background-position:-2px -33px; background-color:#6EEA0F; border-color:#6EEA0F; }
 .smartNote .neutralVibe.active { background-position:-33px -33px; background-color:#FFEB00; border-color:#FFEB00; }
-.smartNote .badVibe.active { background-position:-64px -33px; background-color:#FF0000; border-color:#FF0000; }
+.smartNote .badVibe.active { background-position:-64px -33px; background-color:#FF0000; border-color:#FF0000; }*/
 .smartArea { cursor:crosshair; background:url(pixel.png) repeat top left; }
 .smartArea .pin { display:block; position:absolute; width:28px; height:33px; background:url(pin.png) 0px 0px; }
 .smartArea .active { background-position:-28px 0px; }

@@ -6,32 +6,28 @@
          askiaCompat="5.3.3">
   <info>
     <name>adc2-pinboard</name>
-    <fileName>adc2-pinboard</fileName>
     <guid>c2a3920b-e1fa-4c75-98fd-ee438552c23e</guid>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <date>2015-11-27</date>
     <description>
       <![CDATA[
-        Describe your ADC here
-        
-        Tested in:
-          List the browsers name and version where the ADC should work on.
-          
-        Dependencies:
-          - Name of the 3rd party resource. Version. URL 
-          - Name of the 3rd party resource. Version. URL
-        
-        Notes:
-          Special notes about incompatibility or warnings
+        v1.0.1 
+			- Added params for:
+				open text box visibility, open text box styling, number of mood buttons, mood button styling,
+				and all button styling
+			- Added meta to prevent zoom on mobile
+			- fixed counter problems
+		v1.02
+			- Fixed so mood is automatically selected when there is only one option
+			- Added option to let you select mood when only one option
       ]]>
     </description>
     <author>
       <![CDATA[
-        Author1 <author1@email.com>, 
-        Author2 <author2@email.com>
+        Paul Ferreira <paulf@askia.com>
       ]]>
     </author>
-    <company>Company name</company>
+    <company>Askia</company>
     <helpURL></helpURL>
     <site></site>
     <categories>
@@ -52,11 +48,29 @@
 	  <content fileName="standard.css" type="css" mode="dynamic" position="head" />
 	  <content fileName="standard.html" type="html" mode="dynamic" position="placeholder" />
 	  <content fileName="standard_open.html" type="html" mode="dynamic" position="none" />
+	  <content fileName="meta.html" type="html" mode="dynamic" position="head" />
+      <content fileName="fontello.css" type="css" mode="static" position="none" />
+      <content fileName="fontello-ie7-codes.css" type="css" mode="static" position="none" />
+      <content fileName="fontello-codes.css" type="css" mode="static" position="none" />
+      <content fileName="fontello-embedded.css" type="css" mode="static" position="none" />
+      <content fileName="fontello.eot" type="text" mode="static" position="none" />
+      <content fileName="fontello.svg" type="text" mode="static" position="none" />
+      <content fileName="fontello.ttf" type="text" mode="static" position="none" />
+      <content fileName="fontello.woff" type="text" mode="static" position="none" />
       <content fileName="es5-shim.min.js" type="javascript" mode="share" position="head">
         <yield>
           <![CDATA[
           <!--[if lt IE 10]>
             <script type="text/javascript" src="{%= CurrentADC.URLTo("share/es5-shim.min.js") %}"></script>
+          <![endif]-->
+          ]]>
+        </yield>
+      </content>
+      <content fileName="fontello-ie7.css" type="css" mode="static" position="head">
+        <yield>
+          <![CDATA[
+          <!--[if lt IE 7]>
+<script type="text/javascript" src="{%= CurrentADC.URLTo("static/fontello/css/fontello-ie7.css") %}"></script>
           <![endif]-->
           ]]>
         </yield>
@@ -67,18 +81,12 @@
       <content fileName="pinboard.js" type="javascript" mode="static" position="head"/>
 	  <content fileName="standard.js" type="javascript" mode="dynamic" position="foot" />
 	  <content fileName="standard_open.js" type="javascript" mode="dynamic" position="none" />
-	  <content fileName="sprite.png" type="image" mode="static" position="none" />
 	  <content fileName="pixel.png" type="image" mode="static" position="none" />
-	  <content fileName="pin.png" type="image" mode="static" position="none" />
-	  <content fileName="bin.png" type="image" mode="static" position="none" />
-	  <content fileName="cross.png" type="image" mode="static" position="none" />
-	  <content fileName="tick.png" type="image" mode="static" position="none" />
     </output>
     <output id="fallback">
       <description><![CDATA[Fallback when the browser does not support Javascript]]></description>
       <condition><![CDATA[Not(Browser.Support("javascript"))]]></condition>
       <content fileName="open.html" type="html" mode="dynamic" position="none" />
-      
       <content fileName="default.html" type="html" mode="dynamic" position="placeholder" />
     </output>
   </outputs>
@@ -128,7 +136,7 @@
       </property>
     </category>
 	<category id="image" name="Image">
-		<property xsi:type="standardProperty" id="imagePath" name="Image Path" type="string" mode="static">
+	  <property xsi:type="standardProperty" id="imagePath" name="Image Path" type="string" mode="static">
         <description>
           <![CDATA[Path and filename of image to be used]]>
         </description>
@@ -136,7 +144,7 @@
       </property>
 	</category>
 	<category id="popup" name="Popup">
-		<property xsi:type="standardProperty" id="popupQText" name="Popup Question Text" type="string" mode="static">
+	  <property xsi:type="standardProperty" id="popupQText" name="Popup Question Text" type="string" mode="static">
         <description>
           <![CDATA[
 	          The question text that displays in the popup
@@ -144,7 +152,53 @@
         </description>
         <value>What do you think?</value>
       </property>
-		<property xsi:type="standardProperty" id="popupColourPrimary" name="Popup Colour Primary" type="color" mode="static">
+      <property xsi:type="standardProperty" id="askComment" name="Ask Comment" type="boolean" mode="static">
+        <description>
+          <![CDATA[
+	          Ask for comment in popup. If set to false do not include comment in second loop.
+			]]>
+        </description>
+        <value>1</value>
+      </property>
+      <property xsi:type="standardProperty" id="commentBoxBorderColour" name="Comment Box Border Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Primary colour of the popup
+          ]]>
+        </description>
+        <value>31,31,31</value>
+      </property>
+      <property xsi:type="standardProperty" id="commentBoxBorderThickness" name="Comment Box Border Thickness" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The thickness of the border around the popup
+	        ]]>
+        </description>
+        <value>2px</value>
+        <options>
+          <option value="none" text="None"/>
+          <option value="1px" text="1px"/>
+		  <option value="2px" text="2px"/>
+        </options>
+      </property>
+	  <property xsi:type="standardProperty" id="commentBoxBorderStyle" name="Comment Box Border Style" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The style of the border around the popup
+	        ]]>
+        </description>
+        <value>solid</value>
+        <options>
+		  <option value="none" text="None"/>
+          <option value="solid" text="Solid"/>
+          <option value="dashed" text="Dashed"/>
+		  <option value="dotted" text="Dotted"/>
+		  <option value="double" text="Double"/>
+        </options>
+      </property> 
+        
+        
+	  <property xsi:type="standardProperty" id="popupColourPrimary" name="Popup Colour Primary" type="color" mode="static">
         <description>
           <![CDATA[
             Primary colour of the popup
@@ -201,7 +255,7 @@
 	          The thickness of the border around the popup
 	        ]]>
         </description>
-        <value>1px</value>
+        <value>2px</value>
         <options>
           <option value="none" text="None"/>
           <option value="1px" text="1px"/>
@@ -232,16 +286,34 @@
 	          The visibility of a dropshadow under the popup
 	        ]]>
         </description>
-        <value>none</value>
+        <value>0 2px 3px 0 rgba(0,0,0,0.75)</value>
         <options>
           <option value="0 2px 3px 0 rgba(0,0,0,0.75)" text="On"/>
           <option value="none" text="Off"/>
         </options>
       </property>
+    </category>
+    <category id="buttons" name="Buttons">
+      <property xsi:type="standardProperty" id="buttonIconColour" name="Button Icon Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Button icon colour
+          ]]>
+        </description>
+        <value>255,255,255</value>
+      </property>
 	  <property xsi:type="standardProperty" id="buttonBgColour" name="Button BG Colour" type="color" mode="static">
         <description>
           <![CDATA[
-            Border colour
+            Background colour on the buttons
+          ]]>
+        </description>
+        <value>78,78,110</value>
+      </property>
+      <property xsi:type="standardProperty" id="buttonBorderColour" name="Button Border Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Border colour on the buttons
           ]]>
         </description>
         <value>78,78,110</value>
@@ -249,7 +321,7 @@
 	  <property xsi:type="standardProperty" id="buttonBorderRadius" name="Button Border Radius" type="string" mode="static">
         <description>
           <![CDATA[
-	          The amount of curve on the popup corners
+	          The amount of curve on the buttons
 	        ]]>
         </description>
         <value>100%</value>
@@ -260,6 +332,323 @@
 		  <option value="75%" text="75%"/>
 		  <option value="100%" text="100%"/>
         </options>
+      </property>
+      <property xsi:type="standardProperty" id="buttonBorderThickness" name="Button Border Thickness" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The thickness of the border around the buttons
+	        ]]>
+        </description>
+        <value>2px</value>
+        <options>
+          <option value="none" text="None"/>
+          <option value="1px" text="1px"/>
+		  <option value="2px" text="2px"/>
+        </options>
+      </property>
+      <property xsi:type="standardProperty" id="buttonBorderStyle" name="Button Border Style" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The style of the border around the buttons
+	        ]]>
+        </description>
+        <value>solid</value>
+        <options>
+		  <option value="none" text="None"/>
+          <option value="solid" text="Solid"/>
+          <option value="dashed" text="Dashed"/>
+		  <option value="dotted" text="Dotted"/>
+        </options>
+      </property>
+      <property xsi:type="standardProperty" id="closeButtonHoverBgColour" name="Close Button Hover BG Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Hover Button BG colour
+          ]]>
+        </description>
+        <value>145,000,000</value>
+      </property>
+      <property xsi:type="standardProperty" id="closeButtonHoverBorderColour" name="Close Button Hover Border Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Hover Button Border colour
+          ]]>
+        </description>
+        <value>78,78,110</value>
+      </property>
+      <property xsi:type="standardProperty" id="closeButtonHoverIconColour" name="Close Button Hover Icon Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Hover Button Border colour
+          ]]>
+        </description>
+        <value>000,000,000</value>
+      </property>
+      <property xsi:type="standardProperty" id="confirmButtonHoverBgColour" name="Confirm Button Hover BG Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Hover Button BG colour
+          ]]>
+        </description>
+        <value>110,234,15</value>
+      </property>
+      <property xsi:type="standardProperty" id="confirmButtonHoverBorderColour" name="Confirm Button Hover Border Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Hover Button Border colour
+          ]]>
+        </description>
+        <value>78,78,110</value>
+      </property>
+      <property xsi:type="standardProperty" id="confirmButtonHoverIconColour" name="Confirm Button Hover Icon Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Hover Button Border colour
+          ]]>
+        </description>
+        <value>000,000,000</value>
+      </property>
+      <property xsi:type="standardProperty" id="deleteButtonHoverBgColour" name="Delete Button Hover BG Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Hover Button BG colour
+          ]]>
+        </description>
+        <value>145,000,000</value>
+      </property>
+      <property xsi:type="standardProperty" id="deleteButtonHoverBorderColour" name="Delete Button Hover Border Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Hover Button Border colour
+          ]]>
+        </description>
+        <value>78,78,110</value>
+      </property>
+      <property xsi:type="standardProperty" id="deleteButtonHoverIconColour" name="Delete Button Hover Icon Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Hover Button Border colour
+          ]]>
+        </description>
+        <value>000,000,000</value>
+      </property>
+    </category>
+    <category id="moodButtons" name="Mood Buttons">
+      <property xsi:type="standardProperty" id="numberOfMoods" name="Number of Moods" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          Number of moods to show. 
+			  3 = Yes, Maybe, No. 
+			  2 = Yes, No.
+			  1 = Yes.
+			]]>
+        </description>
+        <value>3</value>
+        <options>
+          <option value="3" text="3"/>
+		  <option value="2" text="2"/>
+          <option value="1" text="1"/>
+        </options>
+      </property>
+      <property xsi:type="standardProperty" id="singleMoodState" name="Single Mood State" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          If only one mood is shown choose mood
+			]]>
+        </description>
+        <value>0</value>
+        <options>
+          <option value="1" text="Yes"/>
+		  <option value="2" text="Maybe"/>
+          <option value="3" text="No"/>
+        </options>
+      </property>
+	  <property xsi:type="standardProperty" id="faceColour" name="Face Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Positive mood button hover state background colour
+          ]]>
+        </description>
+        <value>255,255,255</value>
+      </property>
+      <property xsi:type="standardProperty" id="selectedFaceColour" name="Selected Face Colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Positive mood button hover state background colour
+          ]]>
+        </description>
+        <value>000,000,000</value>
+      </property>
+      <property xsi:type="standardProperty" id="moodButtonBorderThickness" name="Mood Button Border Thickness" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The thickness of the border around the buttons
+	        ]]>
+        </description>
+        <value>2px</value>
+        <options>
+          <option value="none" text="None"/>
+          <option value="1px" text="1px"/>
+		  <option value="2px" text="2px"/>
+        </options>
+      </property>
+      <property xsi:type="standardProperty" id="moodButtonBorderStyle" name="Mood Button Border Style" type="string" mode="static">
+        <description>
+          <![CDATA[
+	          The style of the border around the buttons
+	        ]]>
+        </description>
+        <value>solid</value>
+        <options>
+		  <option value="none" text="None"/>
+          <option value="solid" text="Solid"/>
+          <option value="dashed" text="Dashed"/>
+		  <option value="dotted" text="Dotted"/>
+        </options>
+      </property>
+      <property xsi:type="standardProperty" id="positiveBGColour" name="Positive background colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Positive mood button default state background colour
+          ]]>
+        </description>
+        <value>78,78,110</value>
+      </property>
+      <property xsi:type="standardProperty" id="positiveBorderColour" name="Positive border colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Positive mood button default state background colour
+          ]]>
+        </description>
+        <value>78,78,110</value>
+      </property>
+      <property xsi:type="standardProperty" id="positiveHoverBGColour" name="Positive hover background colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Positive mood button hover state background colour
+          ]]>
+        </description>
+        <value>110,234,15</value>
+      </property>
+      <property xsi:type="standardProperty" id="positiveHoverBorderColour" name="Positive hover border colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Positive mood button default state background colour
+          ]]>
+        </description>
+        <value>110,234,15</value>
+      </property>
+      <property xsi:type="standardProperty" id="positiveSelectedBGColour" name="Positive selected background colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Positive mood button selected state background colour
+          ]]>
+        </description>
+        <value>110,234,15</value>
+      </property>
+      <property xsi:type="standardProperty" id="positiveSelectedBorderColour" name="Positive selected border colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Positive mood button selected state background colour
+          ]]>
+        </description>
+        <value>110,234,15</value>
+      </property>
+      <property xsi:type="standardProperty" id="neutralBGColour" name="Neutral background colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Neutral mood button default state background colour
+          ]]>
+        </description>
+        <value>78,78,110</value>
+      </property>
+      <property xsi:type="standardProperty" id="neutralBorderColour" name="Neutral border colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Neutral mood button default state background colour
+          ]]>
+        </description>
+        <value>78,78,110</value>
+      </property>
+      <property xsi:type="standardProperty" id="neutralHoverBGColour" name="Neutral hover background colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Neutral mood button hover state background colour
+          ]]>
+        </description>
+        <value>255,235,0</value>
+      </property>
+      <property xsi:type="standardProperty" id="neutralHoverBorderColour" name="Neutral hover border colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Neutral mood button hover state background colour
+          ]]>
+        </description>
+        <value>255,235,0</value>
+      </property>
+      <property xsi:type="standardProperty" id="neutralSelectedBGColour" name="Neutral selected background colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Neutral mood button selected state background colour
+          ]]>
+        </description>
+        <value>255,235,0</value>
+      </property>
+      <property xsi:type="standardProperty" id="neutralSelectedBorderColour" name="Neutral selected border colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Neutral mood button selected state background colour
+          ]]>
+        </description>
+        <value>255,235,0</value>
+      </property>
+      <property xsi:type="standardProperty" id="negativeBGColour" name="Negative background colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Negative mood button default state background colour
+          ]]>
+        </description>
+        <value>78,78,110</value>
+      </property>
+      <property xsi:type="standardProperty" id="negativeBorderColour" name="Negative border colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Negative mood button default state background colour
+          ]]>
+        </description>
+        <value>78,78,110</value>
+      </property>
+      <property xsi:type="standardProperty" id="negativeHoverBGColour" name="Negative hover background colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Negative mood button hover state background colour
+          ]]>
+        </description>
+        <value>255,0,0</value>
+      </property>
+      <property xsi:type="standardProperty" id="negativeHoverBorderColour" name="Negative hover border colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Negative mood button hover state background colour
+          ]]>
+        </description>
+        <value>255,0,0</value>
+      </property>
+      <property xsi:type="standardProperty" id="negativeSelectedBGColour" name="Negative selected background colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Negative mood button selected state background colour
+          ]]>
+        </description>
+        <value>255,0,0</value>
+      </property>
+      <property xsi:type="standardProperty" id="negativeSelectedBorderColour" name="Negative selected border colour" type="color" mode="static">
+        <description>
+          <![CDATA[
+            Negative mood button selected state background colour
+          ]]>
+        </description>
+        <value>255,0,0</value>
       </property>
     </category>
 	<category id="counter" name="Counter">

@@ -83,7 +83,11 @@
 			resizedWidth = 0,
 			resizedHeight = 0,
 			ratio = 1,
-			showCounter = options.showCounter;
+			showCounter = options.showCounter,
+			askComment = options.askComment,
+			slLength = askComment ? 4 : 3,
+            numberOfMoods = options.numberOfMoods,
+            singleMoodState = options.singleMoodState;
 			
 		var imgLoad = $("<img />");
 			imgLoad.attr("src", imagePath + "?" + new Date().getTime());
@@ -118,7 +122,7 @@
 		
 		function init() {
 			
-			if ( showCounter ) $('.counterNumber').text( items.length/4 );
+			if ( showCounter ) $('.counterNumber').text( items.length/slLength );
 									
 			// Check if response already has a value
 			
@@ -128,8 +132,16 @@
 				pinWidth = 28,
 				pinHeight = 33,
 				pinID = $('.pin').length - 1,
-				pinMoodArray = ['gPin','nPin','bPin'];
-								
+				pinMoodArray = [];
+            
+            pinMoodArray = ['gPin','nPin','bPin'];
+            /*if ( numberOfMoods === 3 ) pinMoodArray = ['gPin','nPin','bPin'];
+            else if ( numberOfMoods === 2 ) pinMoodArray = ['gPin', 'bPin'];
+			else if ( numberOfMoods === 1 ) {
+                if ( singleMoodState === 'yes' ) pinMoodArray = ['gPin'];
+                else if ( singleMoodState === 'maybe' ) pinMoodArray = ['nPin'];
+                else if ( singleMoodState === 'no' ) pinMoodArray = ['bPin'];
+            }*/
 			
 			$('.smartBoard').prepend('<div class="smartArea" data-id="0" style="position:absolute; ' + 
 				'top:0px; left:0px; ' +
@@ -148,7 +160,7 @@
 						yCoordParent = (e.pageY - offsetParent.top);
 					
 					// if no text and no feeling then remove pin
-					if ( $('.smartNote textarea').val() === '' && $('.smartNote .active').length === 0 ) {
+					if ( (($('.smartNote textarea').val() === '' && !askComment) || ($('.smartNote textarea').val() === '' && askComment)) && $('.smartNote .active').length === 0 ) {
 						$('[data-pinid="' + pinID + '"]').remove();
 					
 						//remove old notes
@@ -176,7 +188,7 @@
 							e.stopImmediatePropagation();
 							
 							// if no text and no feeling then remove pin
-							if ( $('.smartNote textarea').val() === '' && $('.smartNote .active').length === 0 ) {
+							if ( (($('.smartNote textarea').val() === '' && !askComment) || ($('.smartNote textarea').val() === '' && askComment)) && $('.smartNote .active').length === 0 ) {
 								$('[data-pinid="' + pinID + '"]').remove();
 							}	
 							
@@ -187,8 +199,10 @@
 							
 							$('.smartNote .feeling').eq( $(this).data('feeling')-1 ).addClass('active');
 							$('.smartNote').data('feeling', $(this).data('feeling') );
-							$('.smartNote textarea').text( $(this).data('comment') );
-							$('.smartNote').data('comment', $(this).data('comment') );
+							if ( askComment ) {
+								$('.smartNote textarea').text( $(this).data('comment') );
+								$('.smartNote').data('comment', $(this).data('comment') );
+							}
 							
 						});
 					} else {
@@ -209,14 +223,32 @@
 				else if ( (x0 + (noteWidth/2)) > areaWidth ) noteX = areaWidth - noteWidth;	*/
 				if ( (y0 - noteHeight) < 0 ) noteY = y;
 				
-				$(target).append('<div class="smartNote" style="top:' + noteY + 'px; left:' + noteX + 'px; width:' + noteWidth + 'px; height:' + noteHeight + 'px;">' + 
-					'<p>' + noteMessage + '</p>' +
-					'<div class="goodVibe feeling"></div><div class="neutralVibe feeling"></div><div class="badVibe feeling"></div>' +
-					'<textarea name="note" id="note"></textarea>' +
-					'<div class="closeNote"></div>' + 
-					'<div class="deleteNote"></div>' + 
-					'<div class="confirmNote"></div>' + 
-					'</div>');
+				var smartNoteContent =  '<div class="smartNote" style="top:' + noteY + 'px; left:' + noteX + 'px; ' +
+										'width:' + noteWidth + 'px; height:' + noteHeight + 'px;">' + 
+										'<p>' + noteMessage + '</p>';
+                
+                if ( numberOfMoods === 3 || numberOfMoods === 2 ) smartNoteContent += '<div class="goodVibe feeling"><i class="demo-icon icon-emo-happy">&#xe800;</i></div>';
+                if ( numberOfMoods === 3 ) smartNoteContent += '<div class="neutralVibe feeling"><i class="demo-icon icon-emo-sleep">&#xe802;</i></div>';
+				if ( numberOfMoods > 1 ) smartNoteContent += '<div class="badVibe feeling"><i class="demo-icon icon-emo-unhappy">&#xe801;</i></div>';
+				if ( numberOfMoods === 1 ) {
+                    if ( singleMoodState === 1 ) smartNoteContent += '<div class="goodVibe feeling"><i class="demo-icon icon-emo-happy">&#xe800;</i></div>';
+                    else if ( singleMoodState === 2 ) smartNoteContent += '<div class="neutralVibe feeling"><i class="demo-icon icon-emo-sleep">&#xe802;</i></div>';
+                    else if ( singleMoodState === 3 ) smartNoteContent += '<div class="badVibe feeling"><i class="demo-icon icon-emo-unhappy">&#xe801;</i></div>';
+                }
+                
+				if ( askComment ) smartNoteContent += '<textarea name="note" id="note"></textarea>';
+				
+					smartNoteContent += '<div class="closeNote"><i class="demo-icon icon-cancel">&#xe805;</i></div>' + 
+										'<div class="deleteNote"><i class="demo-icon icon-trash-1">&#xe804;</i></div>' + 
+										'<div class="confirmNote"><i class="demo-icon icon-ok">&#xe806;</i></div>' + 
+										'</div>';
+                
+				$(target).append( smartNoteContent );
+                
+                if ( numberOfMoods === 1 ) {
+                    $('.feeling').addClass('active');
+                    $('.feeling').parents('.smartNote').data('feeling',singleMoodState);
+                }
 					
 				$('#note').focus();
 				
@@ -227,7 +259,8 @@
 				$('.smartNote .feeling').click(function(e) {
 					e.stopImmediatePropagation();
 					$('.feeling.active').removeClass('active');
-					$(e.target).addClass('active');
+					if ( !$(e.target).hasClass('feeling') ) $(e.target).parent('.feeling').addClass('active');
+                    else $(e.target).addClass('active');
 					
 					// Write temp data to actual note
 					$(this).parents('.smartNote').data('feeling',$(this).index());
@@ -242,7 +275,7 @@
 					
 					// if no text and no feeling then remove pin
 					if ( $('[data-pinid="' + pinID + '"]').data('feeling') === '' || !$('[data-pinid="' + pinID + '"]').data('feeling') && 
-						 $('[data-pinid="' + pinID + '"]').data('comment') === '' || !$('[data-pinid="' + pinID + '"]').data('comment') ) {
+						 ($('[data-pinid="' + pinID + '"]').data('comment') === '' || !askComment) || (!$('[data-pinid="' + pinID + '"]').data('comment') && askComment) ) {
 						$('[data-pinid="' + pinID + '"]').remove();
 					}
 					
@@ -250,14 +283,12 @@
 				
 				$('.smartNote .confirmNote').click(function(e) {
 					
-					$('.counterNumber').text( parseInt($('.counterNumber').text())-1 );
-					
 					e.stopImmediatePropagation();
 					
 					var feeling = $(this).parents('.smartNote').data('feeling'),
-						comment = $(this).parents('.smartNote').data('comment');
-					
-					if ( !feeling || !comment ) {
+						comment = askComment ? $(this).parents('.smartNote').data('comment') : '';
+                    					
+					if ( !feeling || (!comment && askComment) ) {
 						
 						$('.smartNote').effect('shake');
 					
@@ -269,24 +300,26 @@
 							ratioY = areaHeight/resizedHeight;
 						
 						$('[data-pinid="' + pinID + '"]').data('feeling',feeling);
-						$('[data-pinid="' + pinID + '"]').data('comment',comment);
+						if ( askComment ) $('[data-pinid="' + pinID + '"]').data('comment',comment);
 						$('[data-pinid="' + pinID + '"]').removeClass('gPin nPin bPin').addClass( pinMoodArray[feeling-1]);
 						
 						if ( resizedWidth < areaWidth ) {
-							items[(pinID*4)].element.val( x*ratioX );
-							items[(pinID*4)+1].element.val( y*ratioY );
+							items[(pinID*slLength)].element.val( x*ratioX );
+							items[(pinID*slLength)+1].element.val( y*ratioY );
 						} else {
-							items[(pinID*4)].element.val( x );
-							items[(pinID*4)+1].element.val( y );
+							items[(pinID*slLength)].element.val( x );
+							items[(pinID*slLength)+1].element.val( y );
 						}
-						items[(pinID*4)+2].element.val(feeling);
-						items[(pinID*4)+3].element.val(comment);
+						items[(pinID*slLength)+2].element.val(feeling);
+						if ( askComment ) items[(pinID*slLength)+3].element.val(comment);
 												
 						//remove note
 						$('.smartNote').remove();
 						$('html').css('cursor','default');
 						
 					}
+					
+					$('.counterNumber').text( parseInt( items.length/slLength )- $('.smartArea .pin').length );
 					
 				});
 				
@@ -296,59 +329,63 @@
 					var currentPinID = $(this).parents('.smartArea').find('.pin').data('pinid');
 
 					// if no text and no feeling then remove pin
-					items[(currentPinID*4)].element.val( '' );
-					items[(currentPinID*4)+1].element.val( '' );
-					items[(currentPinID*4)+2].element.val( '' );
-					items[(currentPinID*4)+3].element.val( '' );
+					items[(currentPinID*slLength)].element.val( '' );
+					items[(currentPinID*slLength)+1].element.val( '' );
+					items[(currentPinID*slLength)+2].element.val( '' );
+					if ( askComment ) items[(currentPinID*slLength)+3].element.val( '' );
 					$('[data-pinid="' + pinID + '"]').remove();
 					
 					// cycle through each item and readjust data
 					// remove all data
-					for ( var i=0; i<(items.length/4); i++ ) {
-						items[(i*4)].element.val('');
-						items[(i*4)+1].element.val('');
-						items[(i*4)+2].element.val('');
-						items[(i*4)+3].element.val('');
+					for ( var i=0; i<(items.length/slLength); i++ ) {
+						items[(i*slLength)].element.val('');
+						items[(i*slLength)+1].element.val('');
+						items[(i*slLength)+2].element.val('');
+						if ( askComment ) items[(i*slLength)+3].element.val('');
 					}
 					// change pin id on all current pins1
 					for ( var j=0; j<$('.smartArea .pin').length; j++ ) {
 						pinID = j;
 						$('.smartArea .pin').eq(j).attr('data-pinid',pinID);
-						items[(j*4)].element.val( Math.round($('.smartArea .pin').eq(j).data('data').x) );
-						items[(j*4)+1].element.val( Math.round($('.smartArea .pin').eq(j).data('data').y) );
-						items[(j*4)+2].element.val($('.smartArea .pin').eq(j).data('feeling'));
-						items[(j*4)+3].element.val($('.smartArea .pin').eq(j).data('comment'));
+						items[(j*slLength)].element.val( Math.round($('.smartArea .pin').eq(j).data('data').x) );
+						items[(j*slLength)+1].element.val( Math.round($('.smartArea .pin').eq(j).data('data').y) );
+						items[(j*slLength)+2].element.val($('.smartArea .pin').eq(j).data('feeling'));
+						if ( askComment ) items[(j*slLength)+3].element.val($('.smartArea .pin').eq(j).data('comment'));
 					}
 					
 					$('.smartNote').remove();
 					$('html').css('cursor','default');
+					
+					$('.counterNumber').text( parseInt( items.length/slLength )- $('.smartArea .pin').length );
 						
 				});
 				
-				$('.smartNote textarea').on('change',function() {
-					$('[data-pinid="' + pinID + '"]').data('comment',$(this).val());
-					
-					// Write temp data to actual note
-					$(this).parents('.smartNote').data('comment',$(this).val());
-					
-					//items[(pinID*4)+2].element.val(feeling);
-					items[(pinID*4)+3].element.val($(this).val());
-					
-				});
+				if ( askComment ) {
+					$('.smartNote textarea').on('change',function() {
+						$('[data-pinid="' + pinID + '"]').data('comment',$(this).val());
+						
+						// Write temp data to actual note
+						$(this).parents('.smartNote').data('comment',$(this).val());
+						
+						//items[(pinID*4)+2].element.val(feeling);
+						items[(pinID*4)+3].element.val($(this).val());
+						
+					});
+				}
 				
 			}			
 			
 			// Check for old values
-			for ( var k=0; k<(items.length/4); k++ ) {
+			for ( var k=0; k<(items.length/slLength); k++ ) {
 				
-				var pinX = parseInt(items[(k*4)].element.val()),
-					pinY = parseInt(items[(k*4)+1].element.val()),
-					pinFeeling = parseInt(items[(k*4)+2].element.val()),
-					pinComment = items[(k*4)+3].element.val(),
+				var pinX = parseInt(items[(k*slLength)].element.val()),
+					pinY = parseInt(items[(k*slLength)+1].element.val()),
+					pinFeeling = parseInt(items[(k*slLength)+2].element.val()),
+					pinComment = askComment ? items[(k*slLength)+3].element.val() : '',
 					ratioX = areaWidth/resizedWidth,
 					ratioY = areaHeight/resizedHeight;
-					
-				if ( pinComment !== '' ) {
+
+				if ( pinComment !== '' || ( !askComment && pinFeeling > 0) ) {
 					
 					$('.counterNumber').text( parseInt($('.counterNumber').text())-1 );
 						
@@ -360,7 +397,7 @@
 						$('.smartArea').append('<div class="pin" style="top:' + ((pinY/ratioY) - pinHeight + 5) + 'px; left:' + ((pinX/ratioX) - (pinWidth*0.5)) + 'px;" data-pinid="' + pinID + '" ></div>');	
 						$('[data-pinid="' + pinID + '"]').data("data", {target:$('.smartArea'), x:pinX, y:pinY, x0:xCoordParent, y0:yCoordParent});
 						$('[data-pinid="' + pinID + '"]').data('feeling',pinFeeling);
-						$('[data-pinid="' + pinID + '"]').data('comment',pinComment);
+						if ( askComment ) $('[data-pinid="' + pinID + '"]').data('comment',pinComment);
 						$('[data-pinid="' + pinID + '"]').removeClass('gPin nPin bPin').addClass( pinMoodArray[pinFeeling-1]);
 						
 				}
@@ -371,7 +408,7 @@
 				e.stopImmediatePropagation();
 				
 				// if no text and no feeling then remove pin
-				if ( $('.smartNote textarea').val() === '' && $('.smartNote .active').length === 0 ) {
+				if ( ($('.smartNote textarea').val() === '' && showComment) && $('.smartNote .active').length === 0 ) {
 					$('[data-pinid="' + pinID + '"]').remove();
 				}	
 				
@@ -382,8 +419,10 @@
 				
 				$('.smartNote .feeling').eq( $(this).data('feeling')-1 ).addClass('active');
 				$('.smartNote').data('feeling', $(this).data('feeling') );
-				$('.smartNote textarea').text( $(this).data('comment') );
-				$('.smartNote').data('comment', $(this).data('comment') );
+				if ( askComment ) {
+					$('.smartNote textarea').text( $(this).data('comment') );
+					$('.smartNote').data('comment', $(this).data('comment') );
+				}
 				
 			});
 			

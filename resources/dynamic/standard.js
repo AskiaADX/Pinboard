@@ -8,6 +8,9 @@ $(window).load(function() {
 		imagePath : '{%= CurrentADC.PropValue("imagePath") %}',
 		popupQText : '{%= CurrentADC.PropValue("popupQText") %}',
 		showCounter : {%= (CurrentADC.PropValue("showCounter") = "1") %},
+      	askComment : {%= (CurrentADC.PropValue("askComment") = "1") %},
+        numberOfMoods : {%= CurrentADC.PropValue("numberOfMoods") %},
+        singleMoodState : {%= CurrentADC.PropValue("singleMoodState") %},
 		items : [
 			{%:= CurrentADC.GetContent("dynamic/standard_open.js").ToText()%}
 		]
