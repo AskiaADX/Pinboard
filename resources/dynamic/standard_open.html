@@ -1,4 +1,4 @@
-﻿{% 
+{%
 Dim inputName  =  CurrentQuestion.InputName()
 Dim inputValue =  CurrentQuestion.InputValue()
 Dim inputId
@@ -8,6 +8,7 @@ Dim attrPlaceholder = On(placeholder <> "", "placeholder=\"" + placeholder + "\"
 
 Dim arr = CurrentQuestion.ParentLoop.ParentLoop.AvailableResponses
 Dim ar = CurrentQuestion.ParentLoop.AvailableResponses
+Dim imagePath = CurrentADC.PropValue("imagePath")
 Dim i
 Dim j
 For i = 1 To arr.Count
@@ -39,5 +40,5 @@ For i = 1 To arr.Count
 	{% IF CurrentADC.PropValue("showCounter") = "1" Then %}
 		<div class="counterContainer" unselectable='on' onselectstart='return false;' onmousedown='return false;'><div class="counter"><div class="counterNumber"></div></div></div>
 	{% EndIF %}
-	<img class="smartBG" src="{%= CurrentADC.PropValue("imagePath") %}" />
+	<img class="smartBG" src="{%= imagePath %}" />
 </div>

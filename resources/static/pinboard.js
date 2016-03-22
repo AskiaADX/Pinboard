@@ -85,7 +85,7 @@
 			ratio = 1,
 			showCounter = options.showCounter,
 			askComment = options.askComment,
-			slLength = askComment ? 4 : 3,
+			slLength = askComment ? 4 : 4,
             numberOfMoods = options.numberOfMoods,
             singleMoodState = options.singleMoodState;
 			
@@ -150,7 +150,7 @@
 			
 			$('.smartArea').click(function(e) {
 								
-				if ( $(this).find('.pin').length < (items.length/4) ) {
+				if ( $(this).find('.pin').length < (items.length/slLength) ) {
 
 					var offset = $(this).offset(),
 						xCoord = (e.pageX - offset.left),
@@ -368,7 +368,7 @@
 						$(this).parents('.smartNote').data('comment',$(this).val());
 						
 						//items[(pinID*4)+2].element.val(feeling);
-						items[(pinID*4)+3].element.val($(this).val());
+						items[(pinID*slLength)+3].element.val($(this).val());
 						
 					});
 				}

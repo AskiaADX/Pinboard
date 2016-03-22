@@ -22,7 +22,7 @@
 	</Modality>
 	</Modalities>
 	<Questions>
-      <Question ID="1" Shortcut="numeric" Order="1" ElementType="question" AllowDK="1" QuestionType="numeric" Min="1" Max="5" Decimals="0" Translated="0">
+      <Question ID="1" Shortcut="numeric" Order="1" ElementType="question" AllowDK="1" QuestionType="numeric" Min="0" Max="10" Decimals="0" Translated="0">
       <LongCaption>numeric</LongCaption>
 	</Question>
 	</Questions>

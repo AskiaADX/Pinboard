@@ -1,4 +1,4 @@
-﻿/* standard_open.js */
+/* standard_open.js */
 {% 
 Dim i
 Dim arr = CurrentQuestion.ParentLoop.ParentLoop.AvailableResponses
