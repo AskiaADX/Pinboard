@@ -73,6 +73,7 @@
       <content fileName="standard.js" type="javascript" mode="dynamic" position="foot" />
       <content fileName="standard_open.js" type="javascript" mode="dynamic" position="none" />
       <content fileName="pixel.png" type="image" mode="static" position="none" />
+      <content fileName="pin.png" type="image" mode="static" position="none" />
     </output>
     <output id="fallback">
       <description><![CDATA[Fallback when the browser does not support Javascript]]></description>
