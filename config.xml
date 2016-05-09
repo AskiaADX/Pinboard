@@ -7,7 +7,7 @@
   <info>
     <name>adc2-pinboard</name>
     <guid>c2a3920b-e1fa-4c75-98fd-ee438552c23e</guid>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <date>2015-11-27</date>
     <description><![CDATA[v1.0.1 
 			- Added params for:
@@ -18,9 +18,11 @@
 		v1.02
 			- Fixed so mood is automatically selected when there is only one option
 			- Added option to let you select mood when only one option
-	    v1.03
+	    v1.03 (JD)
 	        - Fixed wrong counter when Ask Comment to No
-	        - Fixed the limitation of 3 pins to add on the picture]]></description>
+	        - Fixed the limitation of 3 pins to add on the picture
+		v1.04 (JD)
+			- Fixed encoding of the question text]]></description>
     <company>Askia</company>
     <author><![CDATA[Paul Ferreira <paulf@askia.com> Jerome Duparc <jeromed@askia.com>]]></author>
     <site>http://www.askia.com/</site>
@@ -117,7 +119,7 @@
       </property>
     </category>
     <category id="popup" name="Popup">
-      <property xsi:type="standardProperty" id="popupQText" name="Popup Question Text" type="string" mode="static">
+      <property xsi:type="standardProperty" id="popupQText" name="Popup Question Text" type="string" mode="static" require="false" visible="true">
         <description><![CDATA[The question text that displays in the popup]]></description>
         <value><![CDATA[What do you think?]]></value>
       </property>
