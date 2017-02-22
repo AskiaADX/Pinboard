@@ -3,7 +3,6 @@
 Dim fontSize =CurrentADC.PropValue("fontSize")
 
 Dim popupColourPrimary =CurrentADC.PropValue("popupColourPrimary")
-Dim popupColourSecondary =CurrentADC.PropValue("popupColourSecondary")
 Dim fontColour =CurrentADC.PropValue("fontColour")
 Dim popupShadow =CurrentADC.PropValue("popupShadow")
 Dim popupBorderColour =CurrentADC.PropValue("popupBorderColour")
@@ -31,7 +30,6 @@ Dim counterBorderColour =CurrentADC.PropValue("counterBorderColour")
 Dim counterBorderRadius =CurrentADC.PropValue("counterBorderRadius")
 Dim counterBorderWidth =CurrentADC.PropValue("counterBorderWidth")
 Dim counterPrimaryColour =CurrentADC.PropValue("counterPrimaryColour")
-Dim counterSecondaryColour =CurrentADC.PropValue("counterSecondaryColour")
 Dim counterFontColour =CurrentADC.PropValue("counterFontColour")
 Dim counterDropShadow =CurrentADC.PropValue("counterDropShadow")
 Dim counterAlign =CurrentADC.PropValue("counterAlign")
@@ -90,14 +88,7 @@ Dim negativeSelectedBorderColour =CurrentADC.PropValue("negativeSelectedBorderCo
 		border: {%= popupBorderThickness%} {%= popupBorderStyle%} rgb({%= popupBorderColour%});
 	{% EndIF %}	
 	
-	background: rgb({%= popupColourPrimary%}); 
-	background: -moz-linear-gradient(top,  rgb({%= popupColourPrimary%}) 0%, rgb({%= popupColourSecondary%}) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb({%= popupColourPrimary%})), color-stop(100%,rgb({%= popupColourSecondary%}))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  rgb({%= popupColourPrimary%}) 0%,rgb({%= popupColourSecondary%}) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  rgb({%= popupColourPrimary%}) 0%,rgb({%= popupColourSecondary%}) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  rgb({%= popupColourPrimary%}) 0%,rgb({%= popupColourSecondary%}) 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  rgb({%= popupColourPrimary%}) 0%,rgb({%= popupColourSecondary%}) 100%); /* W3C */
-	/*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr={%= popupColourPrimary.ToHexa()%}, endColorstr={%= popupColourSecondary.ToHexa()%},GradientType=0 );*/ /* IE6-8 */
+	background-color: rgb({%= popupColourPrimary%});
 	
 	-webkit-border-radius:	{%= popupBorderRadius%}; 
 	-moz-border-radius:		{%= popupBorderRadius%}; 
@@ -265,14 +256,7 @@ Dim negativeSelectedBorderColour =CurrentADC.PropValue("negativeSelectedBorderCo
 	{% Else %}
 		border: {%= counterBorderWidth%} solid rgb({%= counterBorderColour%});
 	{% EndIF %}	
-	background: rgb({%= counterPrimaryColour%}); 
-	background: -moz-linear-gradient(top,  rgb({%= counterPrimaryColour%}) 0%, rgb({%= counterSecondaryColour%}) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb({%= counterPrimaryColour%})), color-stop(100%,rgb({%= counterSecondaryColour%}))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  rgb({%= counterPrimaryColour%}) 0%,rgb({%= counterSecondaryColour%}) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  rgb({%= counterPrimaryColour%}) 0%,rgb({%= counterSecondaryColour%}) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  rgb({%= counterPrimaryColour%}) 0%,rgb({%= counterSecondaryColour%}) 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  rgb({%= counterPrimaryColour%}) 0%,rgb({%= counterSecondaryColour%}) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr={%= counterPrimaryColour.ToHexa()%}, endColorstr={%= counterSecondaryColour.ToHexa()%},GradientType=0 ); /* IE6-8 */
+	background-color: rgb({%= counterPrimaryColour%});
 	
 	display:inline-block; 
 	border-radius:{%= counterBorderRadius%}; 

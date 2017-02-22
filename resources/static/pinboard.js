@@ -316,6 +316,10 @@
 						//remove note
 						$('.smartNote').remove();
 						$('html').css('cursor','default');
+                        
+                        if (window.askia) {
+                            askia.triggerAnswer();
+                        }
 						
 					}
 					
@@ -357,6 +361,9 @@
 					$('html').css('cursor','default');
 					
 					$('.counterNumber').text( parseInt( items.length/slLength )- $('.smartArea .pin').length );
+                    if (window.askia) {
+                        askia.triggerAnswer();
+                    }
 						
 				});
 				
