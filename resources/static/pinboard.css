@@ -97,11 +97,11 @@
 .smartNote .neutralVibe.active { background-position:-33px -33px; background-color:#FFEB00; border-color:#FFEB00; }
 .smartNote .badVibe.active { background-position:-64px -33px; background-color:#FF0000; border-color:#FF0000; }*/
 .smartArea { cursor:crosshair; background:url(pixel.png) repeat top left; }
-.smartArea .pin { display:block; position:absolute; width:28px; height:33px; background:url(pin.png) 0px 0px; }
-.smartArea .active { background-position:-28px 0px; }
-.smartArea .gPin { background-position:0px -31px; }
-.smartArea .gPin.active { background-position:-28px -33px; }
-.smartArea .nPin { background-position:0px -66px; }
-.smartArea .nPin.active { background-position:-28px -66px; }
-.smartArea .bPin { background-position:0px -99px; }
-.smartArea .bPin.active { background-position:-28px -99px; }
+.smartArea .pin { display:block; position:absolute; width:20px; height:25px; background:url(pin.png) 0px 0px; }
+.smartArea .active { background-position:-20px 0px; }
+.smartArea .gPin { background-position:0px -25px; }
+.smartArea .gPin.active { background-position:-20px -25px; }
+.smartArea .nPin { background-position:0px -50px; }
+.smartArea .nPin.active { background-position:-20px -50px; }
+.smartArea .bPin { background-position:0px -75px; }
+.smartArea .bPin.active { background-position:-20px -75px; }
