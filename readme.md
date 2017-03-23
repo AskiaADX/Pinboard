@@ -4,7 +4,7 @@ PinBoard
 Demo
 -------
 
-[Demo of the PinBoard control](http://show.askia.com/WebProd/cgi-bin/AskiaExt.dll?Action=StartSurvey&SurveyName=ADC2_PinBoard)
+[Demo of the PinBoard control](http://demo.askia.com/WebProd/cgi-bin/AskiaExt.dll?Action=StartSurvey&SurveyName=ADC2_PinBoard)
 
 Tested in
 -----------
