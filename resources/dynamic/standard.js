@@ -11,6 +11,7 @@ $(window).load(function() {
       	askComment : {%= (CurrentADC.PropValue("askComment") = "1") %},
         numberOfMoods : {%= CurrentADC.PropValue("numberOfMoods") %},
         singleMoodState : {%= CurrentADC.PropValue("singleMoodState") %},
+      	currentQuestion: '{%:= CurrentQuestion.Shortcut %}',
 		items : [
 			{%:= CurrentADC.GetContent("dynamic/standard_open.js").ToText()%}
 		]

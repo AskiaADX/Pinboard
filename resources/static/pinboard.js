@@ -38,6 +38,7 @@
 		(options.height = options.height || "auto");
 		(options.loading = options.loading || 'Loading $prct'); // remove
 		(options.showCounter = options.showCounter || false);
+        (options.currentQuestion = options.currentQuestion || '');
 				
 		$(this).css({'max-width':options.maxWidth,'width':options.controlWidth});
 		$(this).parents('.controlContainer').css({'width':'100%'});
@@ -317,7 +318,10 @@
 						$('.smartNote').remove();
 						$('html').css('cursor','default');
                         
-                        if (window.askia) {
+                        if (window.askia 
+                            && window.arrLiveRoutingShortcut 
+                            && window.arrLiveRoutingShortcut.length > 0
+                            && window.arrLiveRoutingShortcut.indexOf(options.currentQuestion) >= 0) {
                             askia.triggerAnswer();
                         }
 						
@@ -361,7 +365,10 @@
 					$('html').css('cursor','default');
 					
 					$('.counterNumber').text( parseInt( items.length/slLength )- $('.smartArea .pin').length );
-                    if (window.askia) {
+                    if (window.askia 
+                        && window.arrLiveRoutingShortcut 
+                        && window.arrLiveRoutingShortcut.length > 0
+                        && window.arrLiveRoutingShortcut.indexOf(options.currentQuestion) >= 0) {
                         askia.triggerAnswer();
                     }
 						
