@@ -290,11 +290,9 @@
 						comment = askComment ? $(this).parents('.smartNote').data('comment') : '';
                     					
 					if ( !feeling || (!comment && askComment) ) {
-						
 						$('.smartNote').effect('shake');
 					
 					} else {
-						
 						// store data
 						
 						var ratioX = areaWidth/resizedWidth,
@@ -383,6 +381,16 @@
 						
 						//items[(pinID*4)+2].element.val(feeling);
 						items[(pinID*slLength)+3].element.val($(this).val());
+                        var ratioX = areaWidth/resizedWidth,
+							ratioY = areaHeight/resizedHeight;
+						
+						if ( resizedWidth < areaWidth ) {
+							items[(pinID*slLength)].element.val( x*ratioX );
+							items[(pinID*slLength)+1].element.val( y*ratioY );
+						} else {
+							items[(pinID*slLength)].element.val( x );
+							items[(pinID*slLength)+1].element.val( y );
+						}
 						
 					});
 				}

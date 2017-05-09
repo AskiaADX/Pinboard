@@ -7,7 +7,7 @@
   <info>
     <name>Pinboard</name>
     <guid>c2a3920b-e1fa-4c75-98fd-ee438552c23e</guid>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <date>2015-11-27</date>
     <description><![CDATA[v1.0.1 
 			- Added params for:
@@ -22,7 +22,10 @@
 	        - Fixed wrong counter when Ask Comment to No
 	        - Fixed the limitation of 3 pins to add on the picture
 		v1.04 (JD)
-			- Fixed encoding of the question text]]></description>
+			- Fixed encoding of the question text
+		v2.01
+			- Fixed recording only comment when no feeling selected
+	]]></description>
     <company>Askia</company>
     <author><![CDATA[Paul Ferreira <paulf@askia.com> Jerome Duparc <jeromed@askia.com>]]></author>
     <site>http://www.askia.com/</site>
