@@ -6,8 +6,8 @@ Dim inputId
 Dim placeholder = CurrentADC.PropValue("placeholder")
 Dim attrPlaceholder = On(placeholder <> "", "placeholder=\"" + placeholder + "\"", "")
 
-Dim arr = CurrentQuestion.ParentLoop.ParentLoop.AvailableResponses
-Dim ar = CurrentQuestion.ParentLoop.AvailableResponses
+Dim arr = CurrentQuestion.ParentLoop.ParentLoop.Answers
+Dim ar = CurrentQuestion.ParentLoop.Answers
 Dim imagePath = CurrentADC.PropValue("imagePath")
 Dim i
 Dim j
