@@ -7,7 +7,7 @@
   <info>
     <name>Pinboard</name>
     <guid>c2a3920b-e1fa-4c75-98fd-ee438552c23e</guid>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <date>2015-11-27</date>
     <description><![CDATA[v1.0.1 
 			- Added params for:
@@ -24,8 +24,7 @@
 		v1.04 (JD)
 			- Fixed encoding of the question text
 		v1.05 (PF)
-			- Fixed recording only comment when no feeling selected
-	]]></description>
+			- Fixed recording only comment when no feeling selected]]></description>
     <company>Askia</company>
     <author><![CDATA[Paul Ferreira <paulf@askia.com> Jerome Duparc <jeromed@askia.com>]]></author>
     <site>http://www.askia.com/</site>
@@ -104,9 +103,9 @@
         <description><![CDATA[The maximum width of the control]]></description>
         <value><![CDATA[100%]]></value>
       </property>
-      <property xsi:type="standardProperty" id="controlAlign" name="Control Alignment" type="string" mode="static">
+      <property xsi:type="standardProperty" id="controlAlign" name="Control Alignment" type="string" mode="static" require="false" visible="true">
         <description><![CDATA[The alignment of the control]]></description>
-        <value><![CDATA[left]]></value>
+        <value><![CDATA[center]]></value>
         <options>
           <option value="left" text="Left" />
           <option value="center" text="Center" />
@@ -125,9 +124,13 @@
         <description><![CDATA[The question text that displays in the popup]]></description>
         <value><![CDATA[What do you think?]]></value>
       </property>
-      <property xsi:type="standardProperty" id="askComment" name="Ask Comment" type="boolean" mode="static" require="false" visible="true">
+      <property xsi:type="standardProperty" id="askComment" name="Ask Comment" type="string" mode="dynamic" require="true" visible="true">
         <description><![CDATA[Ask for comment in popup. If set to false do not include comment in second loop.]]></description>
         <value><![CDATA[1]]></value>
+        <options>
+          <option value="1" text="Yes" />
+          <option value="0" text="No" />
+        </options>
       </property>
       <property xsi:type="standardProperty" id="commentBoxBorderColour" name="Comment Box Border Colour" type="color" mode="dynamic" require="true" visible="false">
         <description><![CDATA[Primary colour of the popup]]></description>
@@ -374,9 +377,13 @@
       </property>
     </category>
     <category id="counter" name="Counter">
-      <property xsi:type="standardProperty" id="showCounter" name="Show Counter" type="boolean" mode="static" require="false" visible="true">
+      <property xsi:type="standardProperty" id="showCounter" name="Show Counter" type="string" mode="dynamic" require="true" visible="true">
         <description><![CDATA[Show counter at the top of the control]]></description>
         <value><![CDATA[0]]></value>
+        <options>
+          <option value="1" text="Yes" />
+          <option value="0" text="No" />
+        </options>
       </property>
       <property xsi:type="standardProperty" id="counterPosition" name="Counter Position" type="string" mode="static">
         <description><![CDATA[Set position for counter]]></description>
