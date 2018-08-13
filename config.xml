@@ -26,7 +26,8 @@
 		v1.05 (PF)
 			- Fixed recording only comment when no feeling selected
 		v2.0.2
-			- Added alt attribute to img]]></description>
+			- Added alt attribute to img
+			- Created routing for web accessibility (enhanced)]]></description>
     <company>Askia</company>
     <author><![CDATA[Paul Ferreira <paulf@askia.com> Jerome Duparc <jeromed@askia.com>]]></author>
     <site>http://www.askia.com/</site>
