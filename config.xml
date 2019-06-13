@@ -7,7 +7,7 @@
   <info>
     <name>Pinboard</name>
     <guid>c2a3920b-e1fa-4c75-98fd-ee438552c23e</guid>
-    <version>3.0.1</version>
+    <version>3.0.2</version>
     <date>2015-11-27</date>
     <description><![CDATA[v1.0.1 
 			- Added params for:
@@ -36,13 +36,13 @@
       <category>General</category>
     </categories>
     <constraints>
-      <constraint on="questions" single="false" multiple="false" numeric="false" date="false" open="true" chapter="false" requireParentLoop="true" requireLoopDepth="true" />
+      <constraint on="questions" single="false" multiple="false" numeric="false" date="false" open="true" chapter="false" requireParentLoop="true" requireLoopDepth="2" />
       <constraint on="controls" responseblock="true" checkbox="false" label="false" listbox="false" radiobutton="false" textbox="true" />
       <constraint on="responses" max="*" min="*" />
     </constraints>
   </info>
   <outputs defaultOutput="fallback">
-    <output id="standard">
+    <output id="standard" manageLoopDepth="2">
       <description><![CDATA[Output when the browser support Javascript]]></description>
       <condition><![CDATA[Browser.Support("javascript")]]></condition>
       <content fileName="pinboard.css" type="css" mode="static" position="head" />
@@ -81,7 +81,7 @@
       <content fileName="pixel.png" type="image" mode="static" position="none" />
       <content fileName="pin.png" type="image" mode="static" position="none" />
     </output>
-    <output id="fallback">
+    <output id="fallback" manageLoopDepth="2">
       <description><![CDATA[Fallback when the browser does not support Javascript]]></description>
       <condition><![CDATA[Not(Browser.Support("javascript"))]]></condition>
       <content fileName="open.html" type="html" mode="dynamic" position="none" />
