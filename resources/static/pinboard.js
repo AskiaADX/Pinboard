@@ -136,13 +136,13 @@
 				pinMoodArray = [];
             
             pinMoodArray = ['gPin','nPin','bPin'];
-            /*if ( numberOfMoods === 3 ) pinMoodArray = ['gPin','nPin','bPin'];
+            if ( numberOfMoods === 3 ) pinMoodArray = ['gPin','nPin','bPin'];
             else if ( numberOfMoods === 2 ) pinMoodArray = ['gPin', 'bPin'];
 			else if ( numberOfMoods === 1 ) {
                 if ( singleMoodState === 'yes' ) pinMoodArray = ['gPin'];
                 else if ( singleMoodState === 'maybe' ) pinMoodArray = ['nPin'];
                 else if ( singleMoodState === 'no' ) pinMoodArray = ['bPin'];
-            }*/
+            }
 			
 			$('.smartBoard').prepend('<div class="smartArea" data-id="0" style="position:absolute; ' + 
 				'top:0px; left:0px; ' +
