@@ -301,14 +301,8 @@
 						$('[data-pinid="' + pinID + '"]').data('feeling',feeling);
 						if ( askComment ) $('[data-pinid="' + pinID + '"]').data('comment',comment);
 						$('[data-pinid="' + pinID + '"]').removeClass('gPin nPin bPin').addClass( pinMoodArray[feeling-1]);
-						
-						if ( resizedWidth < areaWidth ) {
-							items[(pinID*slLength)].element.val( x*ratioX );
-							items[(pinID*slLength)+1].element.val( y*ratioY );
-						} else {
-							items[(pinID*slLength)].element.val( x );
-							items[(pinID*slLength)+1].element.val( y );
-						}
+						items[(pinID*slLength)].element.val( x*ratioX );
+						items[(pinID*slLength)+1].element.val( y*ratioY );
 						items[(pinID*slLength)+2].element.val(feeling);
 						if ( askComment ) items[(pinID*slLength)+3].element.val(comment);
 												
@@ -330,7 +324,10 @@
 				});
 				
 				$('.smartNote .deleteNote').click(function(e) {
-					e.stopImmediatePropagation();
+                    e.stopImmediatePropagation();
+                    
+                    var ratioX = areaWidth/resizedWidth,
+							ratioY = areaHeight/resizedHeight;
 					
 					var currentPinID = $(this).parents('.smartArea').find('.pin').data('pinid');
 
@@ -353,8 +350,8 @@
 					for ( var j=0; j<$('.smartArea .pin').length; j++ ) {
 						pinID = j;
 						$('.smartArea .pin').eq(j).attr('data-pinid',pinID);
-						items[(j*slLength)].element.val( Math.round($('.smartArea .pin').eq(j).data('data').x) );
-						items[(j*slLength)+1].element.val( Math.round($('.smartArea .pin').eq(j).data('data').y) );
+						items[(j*slLength)].element.val( $('.smartArea .pin').eq(j).data('data').x*ratioX );
+						items[(j*slLength)+1].element.val( $('.smartArea .pin').eq(j).data('data').y*ratioY );
 						items[(j*slLength)+2].element.val($('.smartArea .pin').eq(j).data('feeling'));
 						if ( askComment ) items[(j*slLength)+3].element.val($('.smartArea .pin').eq(j).data('comment'));
 					}
@@ -383,15 +380,8 @@
 						items[(pinID*slLength)+3].element.val($(this).val());
                         var ratioX = areaWidth/resizedWidth,
 							ratioY = areaHeight/resizedHeight;
-						
-						if ( resizedWidth < areaWidth ) {
 							items[(pinID*slLength)].element.val( x*ratioX );
 							items[(pinID*slLength)+1].element.val( y*ratioY );
-						} else {
-							items[(pinID*slLength)].element.val( x );
-							items[(pinID*slLength)+1].element.val( y );
-						}
-						
 					});
 				}
 				

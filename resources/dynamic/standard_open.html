@@ -1,3 +1,17 @@
+<script>
+	window.addEventListener("load", function() {
+        var img = document.getElementsByTagName("img");
+        for (var i = 0; i< img.length; i++) {
+            if (!img[i].hasAttribute("alt") || img[i].alt == "") {
+                if (img[i].src != undefined) {
+                	img[i].alt = img[i].src.split("/")[img[i].src.split("/").length-1].split(".")[0];    
+                } else {
+                    img[i].alt = "Impossible to load image";
+                }         		
+            }
+        }       
+    }, false);
+</script>
 {%
 Dim inputName  =  CurrentQuestion.InputName()
 Dim inputValue =  CurrentQuestion.InputValue()
@@ -16,22 +30,6 @@ For i = 1 To arr.Count
     inputId   = inputName
     inputValue = CurrentQuestion.Iteration(ar[1].Index,arr[i].Index).InputValue()
 %}
-<script>
-	window.addEventListener("load", function() {
-        var img = document.getElementsByTagName("img");
-        for (var i = 0; i< img.length; i++) {
-            if (!img[i].hasAttribute("alt") || img[i].alt = "") {
-                if (img[i].src != undefined) {
-                	img[i].alt = img[i].src.split("/")[img[i].src.split("/").length-1].split(".")[0];    
-                } else {
-                    img[i].alt = "Impossible to load image";
-                }         		
-            }
-        }       
-    }, false);
-</script>
-
-
 <input type="hidden" id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}" />
 {%
     inputName = CurrentQuestion.Iteration(ar[2].Index,arr[i].Index).InputName()
