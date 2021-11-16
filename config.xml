@@ -7,7 +7,7 @@
   <info>
     <name>Pinboard</name>
     <guid>c2a3920b-e1fa-4c75-98fd-ee438552c23e</guid>
-    <version>3.0.4</version>
+    <version>4.0.0</version>
     <date>2015-11-27</date>
     <description><![CDATA[v1.0.1 
 			- Added params for:
@@ -27,7 +27,8 @@
 			- Fixed recording only comment when no feeling selected
 		v2.0.2
 			- Added alt attribute to img
-			- Created routing for web accessibility (enhanced)]]></description>
+			- Created routing for web accessibility (enhanced)
+        v4.0.0 - added file type parameter]]></description>
     <company>Askia</company>
     <author><![CDATA[Paul Ferreira <paulf@askia.com> Jerome Duparc <jeromed@askia.com>]]></author>
     <site>http://www.askia.com/</site>
@@ -117,7 +118,7 @@
       </property>
     </category>
     <category id="image" name="Image">
-      <property xsi:type="standardProperty" id="imagePath" name="Image Path" type="string" mode="static">
+      <property xsi:type="standardProperty" id="imagePath" name="Image Path" type="file" mode="static">
         <description><![CDATA[Path and filename of image to be used]]></description>
         <value></value>
       </property>
