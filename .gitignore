@@ -33,3 +33,7 @@ gruntfile.js
 .eslintrc.json
 
 .adxstudio/workspace.json
+
+# TMP #
+################
+*.tmp/
