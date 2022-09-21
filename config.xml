@@ -7,31 +7,9 @@
   <info>
     <name>Pinboard</name>
     <guid>c2a3920b-e1fa-4c75-98fd-ee438552c23e</guid>
-    <version>4.0.1</version>
-    <date>2022-07-25</date>
-    <description><![CDATA[
-      v1.0.1
-  			- Added params for:
-  				open text box visibility, open text box styling, number of mood buttons, mood button styling,
-  				and all button styling
-  			- Added meta to prevent zoom on mobile
-  			- fixed counter problems
-  		v1.0.2
-  			- Fixed so mood is automatically selected when there is only one option
-  			- Added option to let you select mood when only one option
-  	    v1.0.3 (JD)
-  	        - Fixed wrong counter when Ask Comment to No
-  	        - Fixed the limitation of 3 pins to add on the picture
-  		v1.0.4 (JD)
-  			- Fixed encoding of the question text
-  		v1.0.5 (PF)
-  			- Fixed recording only comment when no feeling selected
-  		v2.0.2
-  			- Added alt attribute to img
-  			- Created routing for web accessibility (enhanced)
-      v4.0.0 - added file type parameter
-      v4.0.1 - tiny bug Fix on pinboard.js
-      ]]></description>
+    <version>4.1.0</version>
+    <date>2022-09-21</date>
+    <description><![CDATA[Pinboard ADC]]></description>
     <company>Askia</company>
     <author><![CDATA[Paul Ferreira <paulf@askia.com> Jerome Duparc <jeromed@askia.com>]]></author>
     <site>http://www.askia.com/</site>
@@ -62,10 +40,10 @@
       <content fileName="fontello.svg" type="binary" mode="static" position="none" />
       <content fileName="fontello.ttf" type="binary" mode="static" position="none" />
       <content fileName="fontello.woff" type="binary" mode="static" position="none" />
-      <content fileName="es5-shim.min.js" type="javascript" mode="share" position="head">
+      <content fileName="es5-shim.min.js" type="javascript" mode="static" position="head">
         <yield><![CDATA[
           <!--[if lt IE 10]>
-            <script type="text/javascript" src="{%= CurrentADC.URLTo("share/es5-shim.min.js") %}"></script>
+            <script type="text/javascript" src="{%= CurrentADC.URLTo("static/es5-shim.min.js") %}"></script>
           <![endif]-->
         ]]></yield>
       </content>
@@ -76,9 +54,9 @@
           <![endif]-->
         ]]></yield>
       </content>
-      <content fileName="jquery-1.11.3.min.js" type="javascript" mode="share" position="head" />
-      <content fileName="jquery-ui.min.js" type="javascript" mode="share" position="head" />
-      <content fileName="jquery.ui.touch-punch.min.js" type="javascript" mode="share" position="head" />
+      <content fileName="jquery-3.6.0.min.js" type="javascript" mode="static" position="head" />
+      <content fileName="jquery-ui.min.js" type="javascript" mode="static" position="head" />
+      <content fileName="jquery.ui.touch-punch.min.js" type="javascript" mode="static" position="head" />
       <content fileName="pinboard.js" type="javascript" mode="static" position="head" />
       <content fileName="standard.js" type="javascript" mode="dynamic" position="foot" />
       <content fileName="standard_open.js" type="javascript" mode="dynamic" position="none" />

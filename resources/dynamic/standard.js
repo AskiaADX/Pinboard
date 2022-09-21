@@ -1,7 +1,7 @@
 /* standard_default.js */
-$(window).load(function() {
+$(window).on('load', function() {
 	$('#adc_{%= CurrentADC.InstanceId %}').adcPinboard({
-		
+
 		maxWidth : '{%= CurrentADC.PropValue("maxWidth") %}',
 		controlWidth : '{%= CurrentADC.PropValue("controlWidth") %}',
 		controlAlign : '{%= CurrentADC.PropValue("controlAlign") %}',
