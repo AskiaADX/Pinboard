@@ -92,8 +92,8 @@
 
 		var imgLoad = $("<img />");
 			imgLoad.attr("src", imagePath + "?" + new Date().getTime());
-			imgLoad.unbind("load");
-			imgLoad.bind("load", function () {
+			imgLoad.off("load");
+			imgLoad.on("load", function () {
 		   		// Get image sizes
 		  		//$('.smartBoard').css({'display':'block','width':this.width + 'px','height':this.height + 'px'});
 
@@ -149,7 +149,7 @@
 				'width:100%; height:100%; ' +
 				'"></div>');
 
-			$('.smartArea').click(function(e) {
+			$('.smartArea').on('click', function(e) {
 
 				if ( $(this).find('.pin').length < (items.length/slLength) ) {
 
@@ -185,7 +185,7 @@
 						}
 
 						// enable pin editing
-						$('.pin').unbind('click').click(function(e) {
+						$('.pin').off('click').on('click', function(e) {
 							e.stopImmediatePropagation();
 
 							// if no text and no feeling then remove pin
@@ -251,13 +251,13 @@
                     $('.feeling').parents('.smartNote').data('feeling',singleMoodState);
                 }
 
-				$('#note').focus();
+				$('#note').trigger("focus");
 
-				$('.smartNote').click(function(e) {
+				$('.smartNote').on('click', function(e) {
 					e.stopImmediatePropagation();
 				});
 
-				$('.smartNote .feeling').click(function(e) {
+				$('.smartNote .feeling').on('click', function(e) {
 					e.stopImmediatePropagation();
 					$('.feeling.active').removeClass('active');
 					if ( !$(e.target).hasClass('feeling') ) $(e.target).parent('.feeling').addClass('active');
@@ -265,10 +265,10 @@
 
 					// Write temp data to actual note
 					$(this).parents('.smartNote').data('feeling',$(this).index());
-					$('#note').focus();
+					$('#note').trigger( "focus" );
 				});
 
-				$('.smartNote .closeNote').click(function(e) {
+				$('.smartNote .closeNote').on('click', function(e) {
 					e.stopImmediatePropagation();
 
 					//remove note
@@ -282,7 +282,7 @@
 
 				});
 
-				$('.smartNote .confirmNote').click(function(e) {
+				$('.smartNote .confirmNote').on('click', function(e) {
 
 					e.stopImmediatePropagation();
 
@@ -323,7 +323,7 @@
 
 				});
 
-				$('.smartNote .deleteNote').click(function(e) {
+				$('.smartNote .deleteNote').on('click', function(e) {
                     e.stopImmediatePropagation();
 
                     var ratioX = areaWidth/resizedWidth,
@@ -416,7 +416,7 @@
 			}
 
 			// enable pin editing
-			$('.pin').unbind('click').click(function(e) {
+			$('.pin').off('click').on('click', function(e) {
 				e.stopImmediatePropagation();
 
 				// if no text and no feeling then remove pin
@@ -446,7 +446,7 @@
 		if ( total_images > 0 ) {
 			$container.find('img').each(function() {
 				var fakeSrc = $(this).attr('src');
-				$("<img/>").css('display', 'none').load(function() {
+				$("<img/>").css('display', 'none').on('load', function() {
 					images_loaded++;
 					if (images_loaded >= total_images) {
 						// now all images are loaded.
