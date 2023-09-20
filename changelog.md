@@ -20,3 +20,4 @@ v2.0.2
   - Created routing for web accessibility (enhanced)
 v4.0.0 - added file type parameter
 v4.0.1 - tiny bug Fix on pinboard.js
+v4.1.1 - fixed position of the pins
