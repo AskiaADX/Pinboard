@@ -175,7 +175,7 @@
 
 						//add new pin and note
 						pinID = $(this).find('.pin').length;
-						$(e.target).append('<div class="pin active" style="top:' + (yCoord - pinHeight + 5) + 'px; left:' + (xCoord-(pinWidth*0.5)) + 'px;" data-pinid="' + pinID + '" ></div>');
+						$(e.target).append('<div class="pin active" style="top:' + (yCoord - pinHeight + 8) + 'px; left:' + (xCoord-(pinWidth*0.5) + 3) + 'px;" data-pinid="' + pinID + '" ></div>');
 						$('[data-pinid="' + pinID + '"]').data("data", {target:e.target, x:xCoord, y:yCoord, x0:xCoordParent, y0:yCoordParent});
 						addNote(e.target,xCoord,yCoord,xCoordParent,yCoordParent,pinID);
 
@@ -406,7 +406,7 @@
 						yCoordParent = ((pinY + $('.smartArea').offset().top) - offsetParent.top);
 
 						pinID++;
-						$('.smartArea').append('<div class="pin" style="top:' + ((pinY/ratioY) - pinHeight + 5) + 'px; left:' + ((pinX/ratioX) - (pinWidth*0.5)) + 'px;" data-pinid="' + pinID + '" ></div>');
+						$('.smartArea').append('<div class="pin" style="top:' + ((pinY/ratioY) - pinHeight + 8) + 'px; left:' + ((pinX/ratioX) - (pinWidth*0.5) + 3) + 'px;" data-pinid="' + pinID + '" ></div>');
 						$('[data-pinid="' + pinID + '"]').data("data", {target:$('.smartArea'), x:pinX/ratioX, y:pinY/ratioY, x0:xCoordParent, y0:yCoordParent});
 						$('[data-pinid="' + pinID + '"]').data('feeling',pinFeeling);
 						if ( askComment ) $('[data-pinid="' + pinID + '"]').data('comment',pinComment);
