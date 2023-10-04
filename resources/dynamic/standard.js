@@ -1,7 +1,6 @@
-/* standard_default.js */
-$(window).on('load', function() {
-	$('#adc_{%= CurrentADC.InstanceId %}').adcPinboard({
-
+(function () {
+    var pinboard = new Pinboard({
+        instanceId: {%= CurrentADC.InstanceId %},
 		maxWidth : '{%= CurrentADC.PropValue("maxWidth") %}',
 		controlWidth : '{%= CurrentADC.PropValue("controlWidth") %}',
 		controlAlign : '{%= CurrentADC.PropValue("controlAlign") %}',
@@ -15,5 +14,6 @@ $(window).on('load', function() {
 		items : [
 			{%:= CurrentADC.GetContent("dynamic/standard_open.js").ToText()%}
 		]
-	});
-});
+    });
+} ());
+      

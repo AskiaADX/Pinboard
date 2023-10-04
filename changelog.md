@@ -21,3 +21,4 @@ v2.0.2
 v4.0.0 - added file type parameter
 v4.0.1 - tiny bug Fix on pinboard.js
 v4.1.1 - fixed position of the pins
+v4.1.2 - refactored the code to remove jQuery dependencies and use vanilla javascript instead

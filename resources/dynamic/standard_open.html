@@ -50,6 +50,7 @@ For i = 1 To arr.Count
 %}
 <input type="hidden"  id="{%= inputId %}" name="{%= inputName %}" value="{%= inputValue %}" />
 {% Next %}
+<div class="tempArea"></div>
 <div class="smartBoard">
 	{% IF CurrentADC.PropValue("showCounter") = "1" Then %}
 		<div class="counterContainer" unselectable='on' onselectstart='return false;' onmousedown='return false;'><div class="counter"><div class="counterNumber"></div></div></div>
