@@ -14,9 +14,6 @@ Tested in
 Dependencies
 -----------------
 
-    * jquery-1.11.3.min
-	* jquery-ui.min
-	* jquery.ui.touch-punch.min
 	* es5-shim.min
 
 Notes

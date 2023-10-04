@@ -1,365 +1,606 @@
-(function ($) {
-	"use strict";
+(function () {
+    var msEdgeMatch = /Edge\/([0-9]+)/i.exec(navigator.userAgent);
+    if (msEdgeMatch) document.documentMode = parseInt(msEdgeMatch[1]);
+})();
+(function () {
 
-	/**
-	* Extend the jQuery with the method adcStatementList
-	* Should be call on the container of the statement list
-	*
-	*     // Single closed question
-	*     $('#adc_1').adcStatementList({
-	*         iterations : [
-	*           { id : 'U1', caption : "Iteration 1" },
-	*           { id : 'U3', caption : "Iteration 2" },
-	*           { id : 'U5', caption : "Iteration 3" }
-	*         ]
-	*     });
-	*
-	*     // Multi-coded question
-	*     $('#adc_1').adcStatementList({
-	*         isMultiple : true,
-	*         iterations : [
-	*           { id : 'L1', caption : "Iteration 1" },
-	*           { id : 'L3', caption : "Iteration 2" },
-	*           { id : 'L5', caption : "Iteration 3" }
-	*         ]
-	*     });
-	*
-	* @param {Object} options Statements list parameters
-	* @param {Array}  options.iterations Array which contains the definition of iterations
-	* @param {String} options.iterations[].id Id or name of the input which contains the value of the current iteration
-	* @param {String} options.iterations[].caption Caption of the current iteration
-	* @param {Boolean} [options.isMultiple] Indicates if the question is multiple
-	* @return {jQuery} Returns the current instance of the root container for the call chains
-	*/
-	$.fn.adcPinboard = function adcPinboard(options) {
+    /**
+   * Add event listener in DOMElement
+   *
+   * @param {HTMLElement} obj HTMLElement which should be listen
+   * @param {String} type Type of the event to listen
+   * @param {Function} fn Callback function
+   */
+    function addEventListener(el, eventName, eventHandler, selector) {
+        if (selector) {
+            const wrappedHandler = (e) => {
+                if (!e.target) return;
+                const el = e.target.closest(selector);
+                if (el) {
+                    eventHandler.call(el, e);
+                }
+            };
+            el.addEventListener(eventName, wrappedHandler);
+            return wrappedHandler;
+        } else {
+            const wrappedHandler = (e) => {
+                eventHandler.call(el, e);
+            };
+            el.addEventListener(eventName, wrappedHandler);
+            return wrappedHandler;
+        }
+    }
 
-		// MS: Syntax to set the default value or use the one specified
-		(options.width = options.width || 400);
-		(options.height = options.height || "auto");
-		(options.loading = options.loading || 'Loading $prct'); // remove
-		(options.showCounter = options.showCounter || false);
-        (options.currentQuestion = options.currentQuestion || '');
+    /**
+  * function that emulate the jQuery matches function
+  *
+  * @param {HTMLElement} obj HTMLElement which should be listen
+  * @param {String} selector The start element to returns his matches 
+  */
+    function matches(el, selector) {
+        return (
+            el.matches ||
+            el.matchesSelector ||
+            el.msMatchesSelector ||
+            el.mozMatchesSelector ||
+            el.webkitMatchesSelector ||
+            el.oMatchesSelector
+        ).call(el, selector);
+    };
 
-		$(this).css({'max-width':options.maxWidth,'width':options.controlWidth});
-		$(this).parents('.controlContainer').css({'width':'100%'});
+    /**
+   * function that emulate the jQuery parents function
+   *
+   * @param {HTMLElement} obj HTMLElement which should be listen
+   * @param {String} selector The start element to returns his parents 
+   */
+    function parents(el, selector) {
+        var parents = [];
+        while ((el = el.parentNode) && el !== document) {
+            // See "Matches Selector" above
+            if (!selector || matches(el, selector)) parents.push(el);
+        }
+        return parents;
+    }
 
-		if ( options.controlAlign === "center" ) {
-			$(this).parents('.controlContainer').css({'text-align':'center'});
-			$(this).css({'margin':'0px auto'});
-		} else if ( options.controlAlign === "right" ) {
-			$(this).css({'margin':'0 0 0 auto'});
-		}
+    /**
+  * function that emulate the jQuery offset function
+  *
+  * @param {HTMLElement} obj HTMLElement which should be listen
+  */
+    function offset(el) {
+        box = el.getBoundingClientRect();
+        docElem = document.documentElement;
+        return {
+            top: box.top + window.scrollY - docElem.clientTop,
+            left: box.left + window.scrollX - docElem.clientLeft
+        };
+    }
 
-		// IE8 and below fix
-		if (!Array.prototype.indexOf) {
+    /**
+   * function that emulate the jQuery trigger (native event) function
+   *
+   * @param {HTMLElement} obj HTMLElement which should be listen
+   * @param {string} eventname which should be listen
+   */
+    function trigger(el, eventType) {
+        if (typeof eventType === 'string' && typeof el[eventType] === 'function') {
+            el[eventType]();
+        } else {
+            var event;
+            if (eventType === 'string') {
+                event = document.createEvent('HTMLEvents');
+                event.initEvent(eventType, true, false);
+            } else {
+                event = eventType;
+            }
+            el.dispatchEvent(event);
+        }
+    }
 
-		  Array.prototype.indexOf = function(elt /*, from*/) {
-			var len = this.length >>> 0;
+    /**
+   * function that emulate the jQuery index function
+   *
+   * @param {HTMLElement} obj HTMLElement which should be listen
+   */
+    function index(el) {
+        if (!el) return -1;
+        var i = 0;
+        while ((el = el.previousElementSibling)) {
+            i++;
+        }
+        return i;
+    }
 
-			var from = Number(arguments[1]) || 0;
-			from = (from < 0)
-				 ? Math.ceil(from)
-				 : Math.floor(from);
-			if (from < 0)
-			  from += len;
+    var shakingElements = [];
 
-			for (; from < len; from++) {
-			  if (from in this && this[from] === elt)
-				return from;
-			}
-			return -1;
-		  };
-		}
+    /**
+   * function that emulate the jQuery effect Shake
+   *
+   * @param {HTMLElement} obj HTMLElement which should be shaked
+   * @param {Number} number magnitude of the shake optional by default 15
+   */
+    function shake(element, magnitude = 15) {
 
-		// Global variables
-		var $container = $(this),
-			currentIteration = 0,
-			total_images = $container.find("img").length,
-			items = options.items,
-			imagePath = options.imagePath,
-			areaWidth = 0,
-			areaHeight = 0,
-			noteMessage = options.popupQText,
-			images_loaded = 0,
-			resizedWidth = 0,
-			resizedHeight = 0,
-			ratio = 1,
-			showCounter = options.showCounter,
-			askComment = options.askComment,
-			slLength = askComment ? 4 : 4,
-            numberOfMoods = options.numberOfMoods,
-            singleMoodState = options.singleMoodState;
+        //A counter to count the number of shakes
+        var counter = 1;
 
-		var imgLoad = $("<img />");
-			imgLoad.attr("src", imagePath + "?" + new Date().getTime());
-			imgLoad.off("load");
-			imgLoad.on("load", function () {
-		   		// Get image sizes
-		  		//$('.smartBoard').css({'display':'block','width':this.width + 'px','height':this.height + 'px'});
+        //The total number of shakes (there will be 1 shake per frame)
+        var numberOfShakes = 15;
 
-				areaWidth = this.width;
-				areaHeight = this.height;
+        //Capture the element's position and angle so you can
+        //restore them after the shaking has finished
+        var startX = 0,
+            startY = 0;
 
-				$('.smartBoard').css({
-					'width' : '',
-					'height': ''
-				});
+        // Divide the magnitude into 10 units so that you can 
+        // reduce the amount of shake by 10 percent each frame
+        var magnitudeUnit = magnitude / numberOfShakes;
 
-				$container.find('img').hide();
+        //The `randomInt` helper function
+        var randomInt = (min, max) => {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
 
-				ratio = areaHeight/areaWidth,
-				resizedWidth = $container.outerWidth() > areaWidth ? areaWidth : $container.outerWidth(),
-				resizedHeight = (resizedWidth * ratio);
+        //Add the element to the `shakingElements` array if it
+        //isn't already there
+        if (shakingElements.indexOf(element) === -1) {
+            //console.log("added")
+            shakingElements.push(element);
 
-				$('.smartBG, .smartBoard').css({
-					'display' : 'block',
-					'width' : resizedWidth + 'px',
-					'height': resizedHeight + 'px'
-				});
+            upAndDownShake();
+        }
 
-				init();
-			});
+        //The `upAndDownShake` function
+        function upAndDownShake() {
 
+            //Shake the element while the `counter` is less than 
+            //the `numberOfShakes`
+            if (counter < numberOfShakes) {
 
-		function init() {
+                //Reset the element's position at the start of each shake
+                element.style.transform = 'translate(' + startX + 'px, ' + startY + 'px)';
 
-			if ( showCounter ) $('.counterNumber').text( items.length/slLength );
+                //Reduce the magnitude
+                magnitude -= magnitudeUnit;
 
-			// Check if response already has a value
+                //Randomly change the element's position
+                var randomX = randomInt(-magnitude, magnitude);
+                var randomY = randomInt(-magnitude, magnitude);
 
-			var noteWidth = 300,
-				noteHeight = 130,
-				topAdjust = 20,
-				pinWidth = 28,
-				pinHeight = 33,
-				pinID = $('.pin').length - 1,
-				pinMoodArray = [];
+                element.style.transform = 'translate(' + randomX + 'px, ' + randomY + 'px)';
 
-            pinMoodArray = ['gPin','nPin','bPin'];
-            if ( numberOfMoods === 3 ) pinMoodArray = ['gPin','nPin','bPin'];
-            else if ( numberOfMoods === 2 ) pinMoodArray = ['gPin', 'bPin'];
-			else if ( numberOfMoods === 1 ) {
-                if ( singleMoodState === 'yes' ) pinMoodArray = ['gPin'];
-                else if ( singleMoodState === 'maybe' ) pinMoodArray = ['nPin'];
-                else if ( singleMoodState === 'no' ) pinMoodArray = ['bPin'];
+                //Add 1 to the counter
+                counter += 1;
+
+                requestAnimationFrame(upAndDownShake);
             }
 
-			$('.smartBoard').prepend('<div class="smartArea" data-id="0" style="position:absolute; ' +
-				'top:0px; left:0px; ' +
-				'width:100%; height:100%; ' +
-				'"></div>');
+            //When the shaking is finished, restore the element to its original 
+            //position and remove it from the `shakingElements` array
+            if (counter >= numberOfShakes) {
+                element.style.transform = 'translate(' + startX + ', ' + startY + ')';
+                shakingElements.splice(shakingElements.indexOf(element), 1);
+            }
+        }
 
-			$('.smartArea').on('click', function(e) {
+    };
 
-				if ( $(this).find('.pin').length < (items.length/slLength) ) {
+    /**
+  * IE8 and below fix
+  */
+    if (!Array.prototype.indexOf) {
 
-					var offset = $(this).offset(),
-						xCoord = (e.pageX - offset.left),
-						yCoord = (e.pageY - offset.top),
-						offsetParent = $(this).parent('.smartBoard').offset(),
-						xCoordParent = (e.pageX - offsetParent.left),
-						yCoordParent = (e.pageY - offsetParent.top);
+        Array.prototype.indexOf = function (elt) {
+            var len = this.length >>> 0;
 
-					// if no text and no feeling then remove pin
-					if ( (($('.smartNote textarea').val() === '' && !askComment) || ($('.smartNote textarea').val() === '' && askComment)) && $('.smartNote .active').length === 0 ) {
-						$('[data-pinid="' + pinID + '"]').remove();
+            var from = Number(arguments[1]) || 0;
+            from = (from < 0)
+                ? Math.ceil(from)
+                : Math.floor(from);
+            if (from < 0)
+                from += len;
 
-						//remove old notes
-						$('.smartNote').remove();
-					}
+            for (; from < len; from++) {
+                if (from in this && this[from] === elt)
+                    return from;
+            }
+            return -1;
+        };
+    }
 
-					if ( $('.smartNote').length === 0 ) {
+    /**
+   * Creates a new instance of the Pinboard
+   *
+   * @param {Object} options Options of the Pinboard
+   */
+    function Pinboard(options) {
 
-						//remove old notes
-						$('.smartNote').remove();
+        this.options = options;
+        this.instanceId = options.instanceId || 1;
+        this.maxWidth = options.maxWidth || 400;
+        this.controlWidth = options.controlWidth || "100%";
+        this.controlAlign = options.controlAlign || 'center';
+        this.imagePath = options.imagePath || '';
+        this.popupQText = options.popupQText || '';
+        this.currentQuestion = options.currentQuestion;
 
-						//add new pin and note
-						pinID = $(this).find('.pin').length;
-						$(e.target).append('<div class="pin active" style="top:' + (yCoord - pinHeight + 8) + 'px; left:' + (xCoord-(pinWidth*0.5) + 3) + 'px;" data-pinid="' + pinID + '" ></div>');
-						$('[data-pinid="' + pinID + '"]').data("data", {target:e.target, x:xCoord, y:yCoord, x0:xCoordParent, y0:yCoordParent});
-						addNote(e.target,xCoord,yCoord,xCoordParent,yCoordParent,pinID);
+        var adcControl = document.getElementById('adc_' + this.instanceId),
+            smartBoard = adcControl.querySelectorAll('.smartBoard')[0],
+            total_images = !!adcControl.querySelector('img'),
+            areaWidth = 0,
+            areaHeight = 0,
+            noteMessage = options.popupQText,
+            images_loaded = 0,
+            resizedWidth = 0,
+            resizedHeight = 0,
+            ratio = 1,
+            items = options.items,
+            showCounter = options.showCounter || 1,
+            askComment = options.askComment || 1,
+            numberOfMoods = options.numberOfMoods || 3,
+            singleMoodState = options.singleMoodState || 1,
+            slLength = options.askComment ? 4 : 4;
 
-						if ((document.body.clientWidth / window.innerWidth)>1) {
-							var zoom = document.body.clientWidth / window.innerWidth;
-							$('[data-pinid="' + pinID + '"]').data("data", {x:(xCoord*zoom), y:(yCoord*zoom), x0:(xCoordParent*zoom), y0:(yCoordParent*zoom)});
-						}
 
-						// enable pin editing
-						$('.pin').off('click').on('click', function(e) {
-							e.stopImmediatePropagation();
+        adcControl.style.maxWidth = options.maxWidth;
+        adcControl.style.width = options.controlWidth;
+        parents(adcControl, '.controlContainer')[0].style.width = '100%';
 
-							// if no text and no feeling then remove pin
-							if ( (($('.smartNote textarea').val() === '' && !askComment) || ($('.smartNote textarea').val() === '' && askComment)) && $('.smartNote .active').length === 0 ) {
-								$('[data-pinid="' + pinID + '"]').remove();
-							}
+        if (this.controlAlign === "center") {
+            parents(adcControl, '.controlContainer')[0].style.textAlign = 'center';
+            adcControl.style.margin = '0px auto';
+        } else if (this.controlAlign === "right") {
+            adcControl.style.margin = '0 0 0 auto';
+        }
 
-							//remove old notes
-							$('.smartNote').remove();
+        var imgLoad = adcControl.querySelector('img');
+        imgLoad.setAttribute('src', this.imagePath + "?" + new Date().getTime());
+        imgLoad.removeEventListener('load', function () { });
+        addEventListener(imgLoad, 'load', function () {
+            // Get image sizes - this is the img
+            areaWidth = this.width;
+            areaHeight = this.height;
 
-							addNote( $(this).data('data').target , $(this).data('data').x, $(this).data('data').y, $(this).data('data').x0, $(this).data('data').y0, $(this).data('pinid'));
+            smartBoard.style.width = '';
+            smartBoard.style.height = '';
+            // hide the img
+            this.style.display = 'none';
 
-							$('.smartNote .feeling').eq( $(this).data('feeling')-1 ).addClass('active');
-							$('.smartNote').data('feeling', $(this).data('feeling') );
-							if ( askComment ) {
-								$('.smartNote textarea').text( $(this).data('comment') );
-								$('.smartNote').data('comment', $(this).data('comment') );
-							}
+            ratio = areaHeight / areaWidth,
+                resizedWidth = adcControl.offsetWidth > areaWidth ? areaWidth : adcControl.offsetWidth,
+                resizedHeight = (resizedWidth * ratio);
 
-						});
-					} else {
-						$('.smartNote').effect('shake');
-					}
-				}
-			});
+            this.style.display = 'block';
+            this.style.width = resizedWidth + 'px';
+            this.style.height = resizedHeight + 'px';
+            smartBoard.style.display = 'block';
+            smartBoard.style.width = resizedWidth + 'px';
+            smartBoard.style.height = resizedHeight + 'px';
 
-			function addNote(target,x,y,x0,y0,pinID) {
-				var noteX = /*x - (noteWidth/2)*/ ( resizedWidth - ( noteWidth + 14 ) ) * 0.5,
-					noteY = y - (noteHeight) - topAdjust;
+            init();
+        });
 
-				$('.smartArea .pin.active').removeClass('active');
-				$('.smartArea .pin[data-pinid='+pinID+']').addClass('active');
+        function init() {
 
-				// Reposition if note goes off screen
-				/*if ( x0 - (noteWidth/2) < 0 ) noteX = 0;
-				else if ( (x0 + (noteWidth/2)) > areaWidth ) noteX = areaWidth - noteWidth;	*/
-				if ( (y0 - noteHeight) < 0 ) noteY = y;
+            var counterNumber = adcControl.querySelectorAll('.counterNumber')[0];
 
-				var smartNoteContent =  '<div class="smartNote" style="top:' + noteY + 'px; left:' + noteX + 'px; ' +
-										'width:' + noteWidth + 'px; height:' + noteHeight + 'px;">' +
-										'<p>' + noteMessage + '</p>';
+            if (showCounter) {
+                counterNumber.textContent = items.length / slLength;
+            }
 
-                if ( numberOfMoods === 3 || numberOfMoods === 2 ) smartNoteContent += '<div class="goodVibe feeling"><i class="demo-icon icon-emo-happy">&#xe800;</i></div>';
-                if ( numberOfMoods === 3 ) smartNoteContent += '<div class="neutralVibe feeling"><i class="demo-icon icon-emo-sleep">&#xe802;</i></div>';
-				if ( numberOfMoods > 1 ) smartNoteContent += '<div class="badVibe feeling"><i class="demo-icon icon-emo-unhappy">&#xe801;</i></div>';
-				if ( numberOfMoods === 1 ) {
-                    if ( singleMoodState === 1 ) smartNoteContent += '<div class="goodVibe feeling"><i class="demo-icon icon-emo-happy">&#xe800;</i></div>';
-                    else if ( singleMoodState === 2 ) smartNoteContent += '<div class="neutralVibe feeling"><i class="demo-icon icon-emo-sleep">&#xe802;</i></div>';
-                    else if ( singleMoodState === 3 ) smartNoteContent += '<div class="badVibe feeling"><i class="demo-icon icon-emo-unhappy">&#xe801;</i></div>';
+            var noteWidth = 300,
+                noteHeight = 130,
+                topAdjust = 20,
+                pinWidth = 28,
+                pinHeight = 33,
+                pinID = adcControl.querySelectorAll('.pin').length - 1,
+                pinMoodArray = [];
+
+            pinMoodArray = ['gPin', 'nPin', 'bPin'];
+            if (numberOfMoods === 3) pinMoodArray = ['gPin', 'nPin', 'bPin'];
+            else if (numberOfMoods === 2) pinMoodArray = ['gPin', 'bPin'];
+            else if (numberOfMoods === 1) {
+                if (singleMoodState === 1) pinMoodArray = ['gPin'];
+                else if (singleMoodState === 2) pinMoodArray = ['nPin'];
+                else if (singleMoodState === 3) pinMoodArray = ['bPin'];
+            }
+
+            //prepend
+            document.querySelector('.tempArea').innerHTML = '<div class="smartArea" data-id="0" style="position:absolute;top:0px; left:0px;width:100%; height:100%;"></div>';
+            smartBoard.insertAdjacentElement('afterbegin', document.querySelector('.smartArea'));
+
+            var smartArea = adcControl.querySelectorAll('.smartArea')[0];
+
+            addEventListener(smartArea, 'click', function (e) {
+
+                if (this.querySelectorAll('.pin').length < (items.length / slLength)) {
+
+                    var offsetSmartArea = offset(this),
+                        xCoord = (e.pageX - offsetSmartArea.left),
+                        yCoord = (e.pageY - offsetSmartArea.top),
+                        offsetParent = offset(smartBoard),
+                        xCoordParent = (e.pageX - offsetParent.left),
+                        yCoordParent = (e.pageY - offsetParent.top);
+
+                    var smartNoteTextArea = adcControl.querySelectorAll('.smartNote textarea')[0];
+                    var smartNoteActive = adcControl.querySelectorAll('.smartNote .active')[0];
+                    var dataPinId = adcControl.querySelectorAll('[data-pinid="' + pinID + '"]');
+                    var smartNote = adcControl.querySelectorAll('.smartNote');
+
+                    // if no text and no feeling then remove pin
+                    if (((smartNoteTextArea !== undefined && smartNoteTextArea.value.trim() === '' && !askComment) || (smartNoteTextArea !== undefined && smartNoteTextArea.value.trim() === '' && askComment)) && smartNoteActive.length === 0) {
+                        for (var i1 = 0; i1 < dataPinId.length; i1++) {
+                            if (dataPinId[i1].parentNode !== null) {
+                                dataPinId[i1].parentNode.removeChild(dataPinId[i1]);
+                            }
+                        }
+
+                        //remove old notes
+                        for (var i2 = 0; i2 < smartNote.length; i2++) {
+                            if (smartNote[i2].parentNode !== null) {
+                                smartNote[i2].parentNode.removeChild(smartNote[i2]);
+                            }
+                        }
+                    }
+
+                    if (smartNote.length === 0) {
+
+                        //remove old notes
+                        for (var i3 = 0; i3 < smartNote.length; i3++) {
+                            if (smartNote[i3].parentNode !== null) {
+                                smartNote[i3].parentNode.removeChild(smartNote[i3]);
+                            }
+                        }
+
+                        //add new pin and note  
+                        pinID = this.querySelectorAll('.pin').length;
+                        document.querySelector('.tempArea').innerHTML = '<div class="pin active" style="top:' + (yCoord - pinHeight + 8) + 'px; left:' + (xCoord - (pinWidth * 0.5) + 3) + 'px;" data-pinid="' + pinID + '" ></div>';
+                        this.appendChild(document.querySelector('.tempArea .pin.active'));
+                        var dataPinId2 = adcControl.querySelector('[data-pinid="' + pinID + '"]');
+                        dataPinId2.dataset.target = e.target;
+                        dataPinId2.dataset.x = xCoord;
+                        dataPinId2.dataset.y = yCoord;
+                        dataPinId2.dataset.x0 = xCoordParent;
+                        dataPinId2.dataset.y0 = yCoordParent;
+                        addNote(e.target, xCoord, yCoord, xCoordParent, yCoordParent, pinID);
+
+                        if ((document.body.clientWidth / window.innerWidth) > 1) {
+                            var zoom = document.body.clientWidth / window.innerWidth;
+                            dataPinId2.dataset.x = xCoord * zoom;
+                            dataPinId2.dataset.y = yCoord * zoom;
+                            dataPinId2.dataset.x0 = xCoordParent * zoom;
+                            dataPinId2.dataset.y0 = yCoordParent * zoom;
+                        }
+
+                        // enable pin editing
+                        var pins = adcControl.querySelectorAll('.pin');
+                        for (var i4 = 0; i4 < pins.length; i4++) {
+                            pins[i4].removeEventListener('click', function () {});
+                            addEventListener(pins[i4], 'click', function (e) {
+                                e.stopImmediatePropagation();
+
+                                var smartNoteTextArea = adcControl.querySelectorAll('.smartNote textarea')[0];
+                                var smartNoteActive = adcControl.querySelectorAll('.smartNote .active')[0];
+                                var dataPinId3 = adcControl.querySelector('[data-pinid="' + pinID + '"]');
+
+                                // if no text and no feeling then remove pin
+                                if (((smartNoteTextArea !== undefined && smartNoteTextArea.value.trim() === '' && !askComment) || (smartNoteTextArea !== undefined && smartNoteTextArea.value.trim() === '' && askComment)) && smartNoteActive !== undefined && smartNoteActive.length === 0) {
+                                    if (dataPinId3.parentNode !== null) {
+                                        dataPinId3.parentNode.removeChild(dataPinId3);
+                                    }
+                                }
+
+                                //remove old notes
+                                var smartNote = adcControl.querySelector('.smartNote');
+                                if (smartNote !== null && smartNote.parentNode !== null) {
+                                    smartNote.parentNode.removeChild(smartNote);
+                                }
+
+                                addNote(this, this.dataset.x, this.dataset.y, this.dataset.x0, this.dataset.y0, this.dataset.pinid);
+
+                                var smartNoteFeeling = adcControl.querySelectorAll('.smartNote .feeling');
+                                smartNote = adcControl.querySelector('.smartNote');
+                                smartNoteTextArea = adcControl.querySelectorAll('.smartNote textarea')[0];
+                                smartNoteFeeling[this.dataset.feeling - 1].classList.add('active');
+                                smartNote.dataset.feeling = this.dataset.feeling;
+                                if (askComment) {
+                                    smartNoteTextArea.textContent = this.dataset.comment;
+                                    smartNote.dataset.comment = this.dataset.comment;
+                                }
+                            });
+                        }
+                    } else {
+                        smartNote = adcControl.querySelector('.smartNote');
+                        shake(smartNote);
+                    }
+                }
+            });
+
+            function addNote(target, x, y, x0, y0, pinID) {
+                var noteX = (resizedWidth - (noteWidth + 14)) * 0.5;
+                var noteY = y - (noteHeight) - topAdjust;
+
+                var smartNotePinActive = adcControl.querySelector('.smartArea .pin.active');
+                if (smartNotePinActive !== null) smartNotePinActive.classList.remove('active');
+                adcControl.querySelector('.smartArea .pin[data-pinid="' + pinID + '"]').classList.add('active');
+
+                // Reposition if note goes off screen
+                if ((y0 - noteHeight) < 0) noteY = y;
+
+                var smartNoteContent = '<div class="smartNote" style="top:' + noteY + 'px; left:' + noteX + 'px; ' +
+                    'width:' + noteWidth + 'px; height:' + noteHeight + 'px;" data-pinid="' + pinID+ '">' +
+                    '<p>' + noteMessage + '</p>';
+
+                if (numberOfMoods === 3 || numberOfMoods === 2) smartNoteContent += '<div class="goodVibe feeling"><i class="demo-icon icon-emo-happy">&#xe800;</i></div>';
+                if (numberOfMoods === 3) smartNoteContent += '<div class="neutralVibe feeling"><i class="demo-icon icon-emo-sleep">&#xe802;</i></div>';
+                if (numberOfMoods > 1) smartNoteContent += '<div class="badVibe feeling"><i class="demo-icon icon-emo-unhappy">&#xe801;</i></div>';
+                if (numberOfMoods === 1) {
+                    if (singleMoodState === 1) smartNoteContent += '<div class="goodVibe feeling"><i class="demo-icon icon-emo-happy">&#xe800;</i></div>';
+                    else if (singleMoodState === 2) smartNoteContent += '<div class="neutralVibe feeling"><i class="demo-icon icon-emo-sleep">&#xe802;</i></div>';
+                    else if (singleMoodState === 3) smartNoteContent += '<div class="badVibe feeling"><i class="demo-icon icon-emo-unhappy">&#xe801;</i></div>';
                 }
 
-				if ( askComment ) smartNoteContent += '<textarea name="note" id="note"></textarea>';
+                if (askComment) smartNoteContent += '<textarea name="note" id="note"></textarea>';
 
-					smartNoteContent += '<div class="closeNote"><i class="demo-icon icon-cancel">&#xe805;</i></div>' +
-										'<div class="deleteNote"><i class="demo-icon icon-trash-1">&#xe804;</i></div>' +
-										'<div class="confirmNote"><i class="demo-icon icon-ok">&#xe806;</i></div>' +
-										'</div>';
+                smartNoteContent += '<div class="closeNote"><i class="demo-icon icon-cancel">&#xe805;</i></div>' +
+                    '<div class="deleteNote"><i class="demo-icon icon-trash-1">&#xe804;</i></div>' +
+                    '<div class="confirmNote"><i class="demo-icon icon-ok">&#xe806;</i></div>' +
+                    '</div>';
 
-				$(target).append( smartNoteContent );
+                document.querySelector('.tempArea').innerHTML = smartNoteContent;
+                
+                document.querySelector('.smartBoard').appendChild(document.querySelector('.tempArea .smartNote'));
 
-                if ( numberOfMoods === 1 ) {
-                    $('.feeling').addClass('active');
-                    $('.feeling').parents('.smartNote').data('feeling',singleMoodState);
+                if (numberOfMoods === 1) {
+                    var feeling = adcControl.querySelector('.feeling');
+                    feeling.classList.add('active');
+                    parents(feeling, '.smartNote')[0].dataset.feeling = singleMoodState;
                 }
 
-				$('#note').trigger("focus");
+                trigger(adcControl.querySelector('#note'), 'focus');
 
-				$('.smartNote').on('click', function(e) {
-					e.stopImmediatePropagation();
-				});
+                var smartNote = adcControl.querySelector('.smartNote');
 
-				$('.smartNote .feeling').on('click', function(e) {
-					e.stopImmediatePropagation();
-					$('.feeling.active').removeClass('active');
-					if ( !$(e.target).hasClass('feeling') ) $(e.target).parent('.feeling').addClass('active');
-                    else $(e.target).addClass('active');
+                addEventListener(smartNote, 'click', function (e) {
+                    e.stopImmediatePropagation();
+                });
 
-					// Write temp data to actual note
-					$(this).parents('.smartNote').data('feeling',$(this).index());
-					$('#note').trigger( "focus" );
-				});
+                var smartNoteFeeling = adcControl.querySelectorAll('.smartNote .feeling');
 
-				$('.smartNote .closeNote').on('click', function(e) {
-					e.stopImmediatePropagation();
+                for (var i5 = 0; i5 < smartNoteFeeling.length; i5++) {
+                    addEventListener(smartNoteFeeling[i5], 'click', function (e) {
+                        e.stopImmediatePropagation();
+                        var feelingActive = adcControl.querySelector('.feeling.active');
+                        if (feelingActive !== null) feelingActive.classList.remove('active');
 
-					//remove note
-					$('.smartNote').remove();
+                        if (!e.target.classList.contains('feeling')) parents(e.target, '.feeling')[0].classList.add('active');
+                        else e.target.classList.add('active');
 
-					// if no text and no feeling then remove pin
-					if ( $('[data-pinid="' + pinID + '"]').data('feeling') === '' || !$('[data-pinid="' + pinID + '"]').data('feeling') &&
-						 ($('[data-pinid="' + pinID + '"]').data('comment') === '' || !askComment) || (!$('[data-pinid="' + pinID + '"]').data('comment') && askComment) ) {
-						$('[data-pinid="' + pinID + '"]').remove();
-					}
+                        // Write temp data to actual note
+                        parents(this, '.smartNote')[0].dataset.feeling = index(this);
+                        trigger(adcControl.querySelector('#note'), 'focus');
+                    });
+                }
 
-				});
+                var smartNoteCloseNote = adcControl.querySelector('.smartNote .closeNote');
+                addEventListener(smartNoteCloseNote, 'click', function (e) {
+                    e.stopImmediatePropagation();
 
-				$('.smartNote .confirmNote').on('click', function(e) {
+                    //remove note
+                    var smartNote = adcControl.querySelector('.smartNote');
+                    if (smartNote.parentNode !== null) {
+                        smartNote.parentNode.removeChild(smartNote);
+                    }
 
-					e.stopImmediatePropagation();
+                    // if no text and no feeling then remove pin
+                    var dataPinId = adcControl.querySelector('[data-pinid="' + pinID + '"]');
+                    if (dataPinId.dataset.feeling === '' || !dataPinId.dataset.feeling &&
+                        (dataPinId.dataset.comment === '' || !askComment) || (!dataPinId.dataset.comment && askComment)) {
+                        if (dataPinId.parentNode !== null) {
+                            dataPinId.parentNode.removeChild(dataPinId);
+                        }
+                    }
 
-					var feeling = $(this).parents('.smartNote').data('feeling'),
-						comment = askComment ? $(this).parents('.smartNote').data('comment') : '';
+                });
 
-					if ( !feeling || (!comment && askComment) ) {
-						$('.smartNote').effect('shake');
+                var smartNoteConfirmNote = adcControl.querySelector('.smartNote .confirmNote');
 
-					} else {
-						// store data
+                addEventListener(smartNoteConfirmNote, 'click', function (e) {
 
-						var ratioX = areaWidth/resizedWidth,
-							ratioY = areaHeight/resizedHeight;
+                    e.stopImmediatePropagation();
 
-						$('[data-pinid="' + pinID + '"]').data('feeling',feeling);
-						if ( askComment ) $('[data-pinid="' + pinID + '"]').data('comment',comment);
-						$('[data-pinid="' + pinID + '"]').removeClass('gPin nPin bPin').addClass( pinMoodArray[feeling-1]);
-						items[(pinID*slLength)].element.val( x*ratioX );
-						items[(pinID*slLength)+1].element.val( y*ratioY );
-						items[(pinID*slLength)+2].element.val(feeling);
-						if ( askComment ) items[(pinID*slLength)+3].element.val(comment);
+                    var feeling = parents(this, '.smartNote')[0].dataset.feeling,
+                        comment = askComment ? parents(this, '.smartNote')[0].dataset.comment : '';
 
-						//remove note
-						$('.smartNote').remove();
-						$('html').css('cursor','default');
+                    var smartNote = adcControl.querySelector('.smartNote');
+                    if (!feeling || (!comment && askComment)) {
+                        shake(smartNote);
+                    } else {
+                        // store data
+                        var ratioX = areaWidth / resizedWidth,
+                            ratioY = areaHeight / resizedHeight;
 
+                        var dataPinId = adcControl.querySelector('[data-pinid="' + pinID + '"]');
+                        dataPinId.dataset.feeling = feeling;
+                        if (askComment) dataPinId.dataset.comment = comment;
+                        dataPinId.classList.remove('gPin');
+                        dataPinId.classList.remove('nPin');
+                        dataPinId.classList.remove('bPin');
+                        dataPinId.classList.add(pinMoodArray[feeling - 1]);
+                        document.getElementById(items[(pinID * slLength)].element).value = x * ratioX;
+                        document.getElementById(items[(pinID * slLength) + 1].element).value = y * ratioY;
+                        document.getElementById(items[(pinID * slLength) + 2].element).value = feeling;
+                        if (askComment) document.getElementById(items[(pinID * slLength) + 3].element).value = comment;
+
+                        //remove note
+                        if (smartNote.parentNode !== null) {
+                            smartNote.parentNode.removeChild(smartNote);
+                        }
+                        document.querySelector('html').style.cursor = 'default';
+
+                        // live routing
                         if (window.askia
                             && window.arrLiveRoutingShortcut
                             && window.arrLiveRoutingShortcut.length > 0
                             && window.arrLiveRoutingShortcut.indexOf(options.currentQuestion) >= 0) {
                             askia.triggerAnswer();
                         }
+                    }
+                    adcControl.querySelector('.counterNumber').textContent = parseInt(items.length / slLength) - adcControl.querySelectorAll('.smartArea .pin').length;
+                });
 
-					}
+                var smartNoteDeleteNote = adcControl.querySelector('.smartNote .deleteNote');
 
-					$('.counterNumber').text( parseInt( items.length/slLength )- $('.smartArea .pin').length );
-
-				});
-
-				$('.smartNote .deleteNote').on('click', function(e) {
+                addEventListener(smartNoteDeleteNote, 'click', function (e) {
                     e.stopImmediatePropagation();
 
-                    var ratioX = areaWidth/resizedWidth,
-							ratioY = areaHeight/resizedHeight;
+                    var ratioX = areaWidth / resizedWidth,
+                        ratioY = areaHeight / resizedHeight;
 
-					var currentPinID = $(this).parents('.smartArea').find('.pin').data('pinid');
+                    var currentPinID = adcControl.querySelector('.smartNote').dataset.pinid;
 
-					// if no text and no feeling then remove pin
-					items[(currentPinID*slLength)].element.val( '' );
-					items[(currentPinID*slLength)+1].element.val( '' );
-					items[(currentPinID*slLength)+2].element.val( '' );
-					if ( askComment ) items[(currentPinID*slLength)+3].element.val( '' );
-					$('[data-pinid="' + pinID + '"]').remove();
+                    // if no text and no feeling then remove pin
+                    document.getElementById(items[(currentPinID * slLength)].element).value = '';
+                    document.getElementById(items[(currentPinID * slLength) + 1].element).value = '';
+                    document.getElementById(items[(currentPinID * slLength) + 2].element).value = '';
+                    if (askComment) document.getElementById(items[(currentPinID * slLength) + 3].element).value = '';
 
-					// cycle through each item and readjust data
-					// remove all data
-					for ( var i=0; i<(items.length/slLength); i++ ) {
-						items[(i*slLength)].element.val('');
-						items[(i*slLength)+1].element.val('');
-						items[(i*slLength)+2].element.val('');
-						if ( askComment ) items[(i*slLength)+3].element.val('');
-					}
-					// change pin id on all current pins1
-					for ( var j=0; j<$('.smartArea .pin').length; j++ ) {
-						pinID = j;
-						$('.smartArea .pin').eq(j).attr('data-pinid',pinID);
-						items[(j*slLength)].element.val( $('.smartArea .pin').eq(j).data('data').x*ratioX );
-						items[(j*slLength)+1].element.val( $('.smartArea .pin').eq(j).data('data').y*ratioY );
-						items[(j*slLength)+2].element.val($('.smartArea .pin').eq(j).data('feeling'));
-						if ( askComment ) items[(j*slLength)+3].element.val($('.smartArea .pin').eq(j).data('comment'));
-					}
+                    var dataPinId = adcControl.querySelector('[data-pinid="' + pinID + '"]');
+                    if (dataPinId.parentNode !== null) {
+                        dataPinId.parentNode.removeChild(dataPinId);
+                    }
 
-					$('.smartNote').remove();
-					$('html').css('cursor','default');
+                    // cycle through each item and readjust data
+                    // remove all data
+                    for (var i6 = 0; i6 < (items.length / slLength); i6++) {
+                        document.getElementById(items[(i6 * slLength)].element).value = '';
+                        document.getElementById(items[(i6 * slLength) + 1].element).value = '';
+                        document.getElementById(items[(i6 * slLength) + 2].element).value = '';
+                        if (askComment) document.getElementById(items[(i6 * slLength) + 3].element).value = '';
+                    }
+                    // change pin id on all current pins1
+                    var smartAreaPin = adcControl.querySelectorAll('.smartArea .pin');
+                    for (var i7 = 0; i7 < smartAreaPin.length; i7++) {
+                        pinID = i7;
+                        smartAreaPin[i7].setAttribute('data-pinid', pinID);
+                        document.getElementById(items[(i7 * slLength)].element).value = smartAreaPin[i7].dataset.x * ratioX;
+                        document.getElementById(items[(i7 * slLength) + 1].element).value = smartAreaPin[i7].dataset.y * ratioY;
+                        document.getElementById(items[(i7 * slLength) + 2].element).value = smartAreaPin[i7].dataset.feeling;
+                        if (askComment) document.getElementById(items[(i7 * slLength) + 3].element).value = smartAreaPin[i7].dataset.comment;
+                    }
 
-					$('.counterNumber').text( parseInt( items.length/slLength )- $('.smartArea .pin').length );
+                    var smartNote = adcControl.querySelector('.smartNote');
+                    //remove note
+                    if (smartNote.parentNode !== null) {
+                        smartNote.parentNode.removeChild(smartNote);
+                    }
+                    document.querySelector('html').style.cursor = 'default';
+
+                    var counterNumber = adcControl.querySelector('.counterNumber');
+                    counterNumber.textContent = parseInt(items.length / slLength) - adcControl.querySelectorAll('.smartArea .pin').length;
+
+                    // live routing
                     if (window.askia
                         && window.arrLiveRoutingShortcut
                         && window.arrLiveRoutingShortcut.length > 0
@@ -367,114 +608,134 @@
                         askia.triggerAnswer();
                     }
 
-				});
+                });
 
-				if ( askComment ) {
-					$('.smartNote textarea').on('change',function() {
-						$('[data-pinid="' + pinID + '"]').data('comment',$(this).val());
+                if (askComment) {
+                    var smartNoteTextArea = adcControl.querySelector('.smartNote textarea');
 
-						// Write temp data to actual note
-						$(this).parents('.smartNote').data('comment',$(this).val());
+                    addEventListener(smartNoteTextArea, 'change', function () {
+                        var dataPinId = adcControl.querySelector('[data-pinid="' + pinID + '"]');
+                        dataPinId.dataset.comment = this.value;
 
-						//items[(pinID*4)+2].element.val(feeling);
-						items[(pinID*slLength)+3].element.val($(this).val());
-                        var ratioX = areaWidth/resizedWidth,
-							ratioY = areaHeight/resizedHeight;
-							items[(pinID*slLength)].element.val( x*ratioX );
-							items[(pinID*slLength)+1].element.val( y*ratioY );
-					});
-				}
+                        // Write temp data to actual note
+                        parents(this, '.smartNote')[0].dataset.comment = this.value;
 
-			}
+                        document.getElementById(items[(pinID * slLength) + 3].element).value = this.value;
+                        var ratioX = areaWidth / resizedWidth,
+                            ratioY = areaHeight / resizedHeight;
+                        document.getElementById(items[(pinID * slLength)].element).value = x * ratioX;
+                        document.getElementById(items[(pinID * slLength) + 1].element).value = y * ratioY;
+                    });
+                }
+            }
 
-			// Check for old values
-			for ( var k=0; k<(items.length/slLength); k++ ) {
+            // Check for old values
+            for (var k = 0; k < (items.length / slLength); k++) {
+                
+                var pinX = parseFloat(document.getElementById(items[(k * slLength)].element).value),  
+                    pinY = parseFloat(document.getElementById(items[(k * slLength) + 1].element).value),
+                    pinFeeling = parseInt(document.getElementById(items[(k * slLength) + 2].element).value),
+                    pinComment = askComment ? document.getElementById(items[(k * slLength) + 3].element).value : '',
+                    ratioX = areaWidth / resizedWidth,
+                    ratioY = areaHeight / resizedHeight;
 
-				var pinX = parseFloat(items[(k*slLength)].element.val()),
-					pinY = parseFloat(items[(k*slLength)+1].element.val()),
-					pinFeeling = parseInt(items[(k*slLength)+2].element.val()),
-					pinComment = askComment ? items[(k*slLength)+3].element.val() : '',
-					ratioX = areaWidth/resizedWidth,
-					ratioY = areaHeight/resizedHeight;
+                if (pinComment !== '' || (!askComment && pinFeeling > 0)) {
 
-				if ( pinComment !== '' || ( !askComment && pinFeeling > 0) ) {
+                    var counterNumber = adcControl.querySelector('.counterNumber');
+                    counterNumber.textContent = parseInt(counterNumber.textContent) - 1;
 
-					$('.counterNumber').text( parseInt($('.counterNumber').text())-1 );
+                    var offsetParent = offset(adcControl.querySelector('.smartBoard')),
+                        xCoordParent = ((pinX + offset(adcControl.querySelector('.smartArea')).left) - offsetParent.left),
+                        yCoordParent = ((pinY + offset(adcControl.querySelector('.smartArea')).top) - offsetParent.top);
 
-					var offsetParent = $('.smartBoard').offset(),
-						xCoordParent = ((pinX + $('.smartArea').offset().left )- offsetParent.left),
-						yCoordParent = ((pinY + $('.smartArea').offset().top) - offsetParent.top);
+                    pinID++;
 
-						pinID++;
-						$('.smartArea').append('<div class="pin" style="top:' + ((pinY/ratioY) - pinHeight + 8) + 'px; left:' + ((pinX/ratioX) - (pinWidth*0.5) + 3) + 'px;" data-pinid="' + pinID + '" ></div>');
-						$('[data-pinid="' + pinID + '"]').data("data", {target:$('.smartArea'), x:pinX/ratioX, y:pinY/ratioY, x0:xCoordParent, y0:yCoordParent});
-						$('[data-pinid="' + pinID + '"]').data('feeling',pinFeeling);
-						if ( askComment ) $('[data-pinid="' + pinID + '"]').data('comment',pinComment);
-						$('[data-pinid="' + pinID + '"]').removeClass('gPin nPin bPin').addClass( pinMoodArray[pinFeeling-1]);
+                    document.querySelector('.tempArea').innerHTML = '<div class="pin" style="top:' + ((pinY / ratioY) - pinHeight + 8) + 'px; left:' + ((pinX / ratioX) - (pinWidth * 0.5) + 3) + 'px;" data-pinid="' + pinID + '" ></div>'
+                    adcControl.querySelector('.smartArea').appendChild(document.querySelector('.tempArea .pin'));
+                    var dataPinId = adcControl.querySelector('[data-pinid="' + pinID + '"]');
+                    if (dataPinId !== null) {
+                        dataPinId.dataset.target = adcControl.querySelector('.smartArea');
+                        dataPinId.dataset.x = pinX / ratioX;
+                        dataPinId.dataset.y = pinY / ratioY;
+                        dataPinId.dataset.x0 = xCoordParent;
+                        dataPinId.dataset.y0 = yCoordParent;
+                        dataPinId.dataset.feeling = pinFeeling;
+                        if (askComment) dataPinId.dataset.comment = pinComment;
+                        dataPinId.classList.remove('gPin');
+                        dataPinId.classList.remove('nPin');
+                        dataPinId.classList.remove('bPin');
+                        dataPinId.classList.add(pinMoodArray[pinFeeling - 1]);
+                    }
+                }
+            }
 
-				}
-			}
+            // enable pin editing
+            var pins = adcControl.querySelectorAll('.pin');
+            for (var m = 0; m < pins.length; m++) {
+                pins[m].removeEventListener('click', function () { });
+                addEventListener(pins[m], 'click', function (e) {
+                    e.stopImmediatePropagation();
 
-			// enable pin editing
-			$('.pin').off('click').on('click', function(e) {
-				e.stopImmediatePropagation();
+                    // if no text and no feeling then remove pin
+                    var smartNoteTextArea = adcControl.querySelector('.smartNote textarea');
+                    var smartNoteActive = adcControl.querySelector('.smartNote .active');
+                    if ((smartNoteTextArea !== null && smartNoteTextArea.value === '' && showComment) && smartNoteActive !== null && smartNoteActive.length === 0) {
+                        var dataPinId = adcControl.querySelector('[data-pinid="' + pinID + '"]');
+                        if (dataPinId.parentNode !== null) {
+                            dataPinId.parentNode.removeChild(dataPinId);
+                        }
+                    }
 
-				// if no text and no feeling then remove pin
-				if ( ($('.smartNote textarea').val() === '' && showComment) && $('.smartNote .active').length === 0 ) {
-					$('[data-pinid="' + pinID + '"]').remove();
-				}
+                    //remove old notes
+                    var smartNote = adcControl.querySelector('.smartNote');
+                    if (smartNote !== null && smartNote.parentNode !== null) {
+                        smartNote.parentNode.removeChild(smartNote);
+                    }
 
-				//remove old notes
-				$('.smartNote').remove();
+                    addNote(this, this.dataset.x, this.dataset.y, this.dataset.x0, this.dataset.y0, this.dataset.pinid);
 
-				addNote( $(this).data('data').target , $(this).data('data').x, $(this).data('data').y, $(this).data('data').x0, $(this).data('data').y0, $(this).data('pinid'));
+                    var smartNoteFeeling = adcControl.querySelectorAll('.smartNote .feeling');
 
-				$('.smartNote .feeling').eq( $(this).data('feeling')-1 ).addClass('active');
-				$('.smartNote').data('feeling', $(this).data('feeling') );
-				if ( askComment ) {
-					$('.smartNote textarea').text( $(this).data('comment') );
-					$('.smartNote').data('comment', $(this).data('comment') );
-				}
+                    smartNoteFeeling[this.dataset.feeling - 1].classList.add('active');
 
-			});
+                    smartNote = adcControl.querySelector('.smartNote');
+                    smartNoteTextArea = adcControl.querySelector('.smartNote textarea');
+                    smartNote.dataset.feeling = this.dataset.feeling;
+                    if (askComment) {
+                        smartNoteTextArea.textContent = this.dataset.comment;
+                        smartNote.dataset.comment = this.dataset.comment;
+                    }
 
+                });
+            }
 
-		}
+        }
 
-		// Attach all events
-		//$container.delegate('.responseItem', 'click', (!isMultiple) ? selectStatementSingle : selectStatementMulitple);
-		if ( total_images > 0 ) {
-			$container.find('img').each(function() {
-				var fakeSrc = $(this).attr('src');
-				$("<img/>").css('display', 'none').on('load', function() {
-					images_loaded++;
-					if (images_loaded >= total_images) {
-						// now all images are loaded.
+        // Attach all events
+        if (total_images > 0) {
+            var container = document.querySelector('#adc_' + this.instanceId);
+            var imgs = container.querySelectorAll('img');
+            for (var n = 0; n < imgs.length; n++) {
+                var fakeSrc = imgs[n].getAttribute('src');
+                imgs[n].style.display = 'none';
+                addEventListener(imgs[n], 'load', function () {
+                    images_loaded++;
+                    if (images_loaded >= total_images) {
+                        container.style.visibility = 'visible';
+                    }
+                })
+                imgs[n].setAttribute('src', fakeSrc);
+            }
+        } else {
+            container.style.visibility = 'visible';
+            init();
+        }
 
-						// Check for missing images and resize
-						/*$container.find('.responseItem img').each(function forEachImage(index) {
+    }
 
-							$(this).show();
+    /**
+   * Attach the Pinboard to the window object
+   */
+    window.Pinboard = Pinboard;
 
-							var size = {
-								width: $(this).width(),
-								height: $(this).height()
-							};
-
-						});*/
-
-						$container.css('visibility','visible');
-
-					}
-				}).attr("src", fakeSrc);
-			});
-		} else {
-			$container.css('visibility','visible');
-			init();
-		}
-
-		// Returns the container
-		return this;
-	};
-
-} (jQuery));
+}());

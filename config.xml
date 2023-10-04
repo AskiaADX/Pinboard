@@ -7,7 +7,7 @@
   <info>
     <name>Pinboard</name>
     <guid>c2a3920b-e1fa-4c75-98fd-ee438552c23e</guid>
-    <version>4.1.1</version>
+    <version>4.1.2</version>
     <date>2022-09-21</date>
     <description><![CDATA[Pinboard ADC]]></description>
     <company>Askia</company>
@@ -54,9 +54,6 @@
           <![endif]-->
         ]]></yield>
       </content>
-      <content fileName="jquery-3.6.0.min.js" type="javascript" mode="static" position="head" />
-      <content fileName="jquery-ui.min.js" type="javascript" mode="static" position="head" />
-      <content fileName="jquery.ui.touch-punch.min.js" type="javascript" mode="static" position="head" />
       <content fileName="pinboard.js" type="javascript" mode="static" position="head" />
       <content fileName="standard.js" type="javascript" mode="dynamic" position="foot" />
       <content fileName="standard_open.js" type="javascript" mode="dynamic" position="none" />
