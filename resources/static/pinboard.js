@@ -5,33 +5,6 @@
 (function () {
 
     /**
-   * Add event listener in DOMElement
-   *
-   * @param {HTMLElement} obj HTMLElement which should be listen
-   * @param {String} type Type of the event to listen
-   * @param {Function} fn Callback function
-   */
-    function addEventListener(el, eventName, eventHandler, selector) {
-        if (selector) {
-            const wrappedHandler = (e) => {
-                if (!e.target) return;
-                const el = e.target.closest(selector);
-                if (el) {
-                    eventHandler.call(el, e);
-                }
-            };
-            el.addEventListener(eventName, wrappedHandler);
-            return wrappedHandler;
-        } else {
-            const wrappedHandler = (e) => {
-                eventHandler.call(el, e);
-            };
-            el.addEventListener(eventName, wrappedHandler);
-            return wrappedHandler;
-        }
-    }
-
-    /**
   * function that emulate the jQuery matches function
   *
   * @param {HTMLElement} obj HTMLElement which should be listen
@@ -46,7 +19,7 @@
             el.webkitMatchesSelector ||
             el.oMatchesSelector
         ).call(el, selector);
-    };
+    }
 
     /**
    * function that emulate the jQuery parents function
@@ -72,8 +45,8 @@
         box = el.getBoundingClientRect();
         docElem = document.documentElement;
         return {
-            top: box.top + window.scrollY - docElem.clientTop,
-            left: box.left + window.scrollX - docElem.clientLeft
+            top: box.top + window.pageYOffset - docElem.clientTop,
+            left: box.left + window.pageXOffset - docElem.clientLeft
         };
     }
 
@@ -120,7 +93,7 @@
    * @param {HTMLElement} obj HTMLElement which should be shaked
    * @param {Number} number magnitude of the shake optional by default 15
    */
-    function shake(element, magnitude = 15) {
+    function shake(element, magnitude) {
 
         //A counter to count the number of shakes
         var counter = 1;
@@ -138,9 +111,9 @@
         var magnitudeUnit = magnitude / numberOfShakes;
 
         //The `randomInt` helper function
-        var randomInt = (min, max) => {
+        function randomInt(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
-        };
+        }
 
         //Add the element to the `shakingElements` array if it
         //isn't already there
@@ -257,7 +230,7 @@
         var imgLoad = adcControl.querySelector('img');
         imgLoad.setAttribute('src', this.imagePath + "?" + new Date().getTime());
         imgLoad.removeEventListener('load', function () { });
-        addEventListener(imgLoad, 'load', function () {
+        imgLoad.addEventListener('load', function () {
             // Get image sizes - this is the img
             areaWidth = this.width;
             areaHeight = this.height;
@@ -312,7 +285,7 @@
 
             var smartArea = adcControl.querySelectorAll('.smartArea')[0];
 
-            addEventListener(smartArea, 'click', function (e) {
+            smartArea.addEventListener('click', function (e) {
 
                 if (this.querySelectorAll('.pin').length < (items.length / slLength)) {
 
@@ -329,7 +302,7 @@
                     var smartNote = adcControl.querySelectorAll('.smartNote');
 
                     // if no text and no feeling then remove pin
-                    if (((smartNoteTextArea !== undefined && smartNoteTextArea.value.trim() === '' && !askComment) || (smartNoteTextArea !== undefined && smartNoteTextArea.value.trim() === '' && askComment)) && smartNoteActive.length === 0) {
+                    if (((smartNoteTextArea !== undefined && smartNoteTextArea.value.trim() === '' && !askComment) || (smartNoteTextArea !== undefined && smartNoteTextArea.value.trim() === '' && askComment)) && smartNoteActive !== undefined && smartNoteActive.length === 0) {
                         for (var i1 = 0; i1 < dataPinId.length; i1++) {
                             if (dataPinId[i1].parentNode !== null) {
                                 dataPinId[i1].parentNode.removeChild(dataPinId[i1]);
@@ -376,8 +349,8 @@
                         // enable pin editing
                         var pins = adcControl.querySelectorAll('.pin');
                         for (var i4 = 0; i4 < pins.length; i4++) {
-                            pins[i4].removeEventListener('click', function () {});
-                            addEventListener(pins[i4], 'click', function (e) {
+                            pins[i4].removeEventListener('click', function () { });
+                            pins[i4].addEventListener('click', function (e) {
                                 e.stopImmediatePropagation();
 
                                 var smartNoteTextArea = adcControl.querySelectorAll('.smartNote textarea')[0];
@@ -412,7 +385,7 @@
                         }
                     } else {
                         smartNote = adcControl.querySelector('.smartNote');
-                        shake(smartNote);
+                        shake(smartNote, 15);
                     }
                 }
             });
@@ -429,7 +402,7 @@
                 if ((y0 - noteHeight) < 0) noteY = y;
 
                 var smartNoteContent = '<div class="smartNote" style="top:' + noteY + 'px; left:' + noteX + 'px; ' +
-                    'width:' + noteWidth + 'px; height:' + noteHeight + 'px;" data-pinid="' + pinID+ '">' +
+                    'width:' + noteWidth + 'px; height:' + noteHeight + 'px;" data-pinid="' + pinID + '">' +
                     '<p>' + noteMessage + '</p>';
 
                 if (numberOfMoods === 3 || numberOfMoods === 2) smartNoteContent += '<div class="goodVibe feeling"><i class="demo-icon icon-emo-happy">&#xe800;</i></div>';
@@ -449,7 +422,7 @@
                     '</div>';
 
                 document.querySelector('.tempArea').innerHTML = smartNoteContent;
-                
+
                 document.querySelector('.smartBoard').appendChild(document.querySelector('.tempArea .smartNote'));
 
                 if (numberOfMoods === 1) {
@@ -462,14 +435,14 @@
 
                 var smartNote = adcControl.querySelector('.smartNote');
 
-                addEventListener(smartNote, 'click', function (e) {
+                smartNote.addEventListener('click', function (e) {
                     e.stopImmediatePropagation();
                 });
 
                 var smartNoteFeeling = adcControl.querySelectorAll('.smartNote .feeling');
 
                 for (var i5 = 0; i5 < smartNoteFeeling.length; i5++) {
-                    addEventListener(smartNoteFeeling[i5], 'click', function (e) {
+                    smartNoteFeeling[i5].addEventListener('click', function (e) {
                         e.stopImmediatePropagation();
                         var feelingActive = adcControl.querySelector('.feeling.active');
                         if (feelingActive !== null) feelingActive.classList.remove('active');
@@ -484,7 +457,7 @@
                 }
 
                 var smartNoteCloseNote = adcControl.querySelector('.smartNote .closeNote');
-                addEventListener(smartNoteCloseNote, 'click', function (e) {
+                smartNoteCloseNote.addEventListener('click', function (e) {
                     e.stopImmediatePropagation();
 
                     //remove note
@@ -506,7 +479,7 @@
 
                 var smartNoteConfirmNote = adcControl.querySelector('.smartNote .confirmNote');
 
-                addEventListener(smartNoteConfirmNote, 'click', function (e) {
+                smartNoteConfirmNote.addEventListener('click', function (e) {
 
                     e.stopImmediatePropagation();
 
@@ -515,7 +488,7 @@
 
                     var smartNote = adcControl.querySelector('.smartNote');
                     if (!feeling || (!comment && askComment)) {
-                        shake(smartNote);
+                        shake(smartNote, 15);
                     } else {
                         // store data
                         var ratioX = areaWidth / resizedWidth,
@@ -552,7 +525,7 @@
 
                 var smartNoteDeleteNote = adcControl.querySelector('.smartNote .deleteNote');
 
-                addEventListener(smartNoteDeleteNote, 'click', function (e) {
+                smartNoteDeleteNote.addEventListener('click', function (e) {
                     e.stopImmediatePropagation();
 
                     var ratioX = areaWidth / resizedWidth,
@@ -613,7 +586,7 @@
                 if (askComment) {
                     var smartNoteTextArea = adcControl.querySelector('.smartNote textarea');
 
-                    addEventListener(smartNoteTextArea, 'change', function () {
+                    smartNoteTextArea.addEventListener('change', function () {
                         var dataPinId = adcControl.querySelector('[data-pinid="' + pinID + '"]');
                         dataPinId.dataset.comment = this.value;
 
@@ -631,8 +604,8 @@
 
             // Check for old values
             for (var k = 0; k < (items.length / slLength); k++) {
-                
-                var pinX = parseFloat(document.getElementById(items[(k * slLength)].element).value),  
+
+                var pinX = parseFloat(document.getElementById(items[(k * slLength)].element).value),
                     pinY = parseFloat(document.getElementById(items[(k * slLength) + 1].element).value),
                     pinFeeling = parseInt(document.getElementById(items[(k * slLength) + 2].element).value),
                     pinComment = askComment ? document.getElementById(items[(k * slLength) + 3].element).value : '',
@@ -673,7 +646,7 @@
             var pins = adcControl.querySelectorAll('.pin');
             for (var m = 0; m < pins.length; m++) {
                 pins[m].removeEventListener('click', function () { });
-                addEventListener(pins[m], 'click', function (e) {
+                pins[m].addEventListener('click', function (e) {
                     e.stopImmediatePropagation();
 
                     // if no text and no feeling then remove pin
@@ -718,7 +691,7 @@
             for (var n = 0; n < imgs.length; n++) {
                 var fakeSrc = imgs[n].getAttribute('src');
                 imgs[n].style.display = 'none';
-                addEventListener(imgs[n], 'load', function () {
+                imgs[n].addEventListener('load', function () {
                     images_loaded++;
                     if (images_loaded >= total_images) {
                         container.style.visibility = 'visible';
