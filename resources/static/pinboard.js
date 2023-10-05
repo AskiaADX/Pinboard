@@ -209,10 +209,10 @@
             resizedHeight = 0,
             ratio = 1,
             items = options.items,
-            showCounter = options.showCounter || 1,
-            askComment = options.askComment || 1,
+            showCounter = options.showCounter || 0,
+            askComment = options.askComment || 0,
             numberOfMoods = options.numberOfMoods || 3,
-            singleMoodState = options.singleMoodState || 1,
+            singleMoodState = options.singleMoodState,
             slLength = options.askComment ? 4 : 4;
 
 
@@ -268,16 +268,9 @@
                 pinWidth = 28,
                 pinHeight = 33,
                 pinID = adcControl.querySelectorAll('.pin').length - 1,
-                pinMoodArray = [];
+                pinMoodArray = ['gPin', 'nPin', 'bPin'];
 
-            pinMoodArray = ['gPin', 'nPin', 'bPin'];
-            if (numberOfMoods === 3) pinMoodArray = ['gPin', 'nPin', 'bPin'];
-            else if (numberOfMoods === 2) pinMoodArray = ['gPin', 'bPin'];
-            else if (numberOfMoods === 1) {
-                if (singleMoodState === 1) pinMoodArray = ['gPin'];
-                else if (singleMoodState === 2) pinMoodArray = ['nPin'];
-                else if (singleMoodState === 3) pinMoodArray = ['bPin'];
-            }
+            if (numberOfMoods === 2) pinMoodArray = ['gPin', 'bPin', 'nPin'];
 
             //prepend
             document.querySelector('.tempArea').innerHTML = '<div class="smartArea" data-id="0" style="position:absolute;top:0px; left:0px;width:100%; height:100%;"></div>';
@@ -431,7 +424,8 @@
                     parents(feeling, '.smartNote')[0].dataset.feeling = singleMoodState;
                 }
 
-                trigger(adcControl.querySelector('#note'), 'focus');
+                var note = adcControl.querySelector('#note');
+                if (note !== null) trigger(note, 'focus');
 
                 var smartNote = adcControl.querySelector('.smartNote');
 
@@ -452,7 +446,8 @@
 
                         // Write temp data to actual note
                         parents(this, '.smartNote')[0].dataset.feeling = index(this);
-                        trigger(adcControl.querySelector('#note'), 'focus');
+                        var note = adcControl.querySelector('#note');
+                        if (note !== null) trigger(note, 'focus');
                     });
                 }
 
@@ -520,7 +515,8 @@
                             askia.triggerAnswer();
                         }
                     }
-                    adcControl.querySelector('.counterNumber').textContent = parseInt(items.length / slLength) - adcControl.querySelectorAll('.smartArea .pin').length;
+                    var counterNumber = adcControl.querySelector('.counterNumber');
+                    if (counterNumber !== null) adcControl.querySelector('.counterNumber').textContent = parseInt(items.length / slLength) - adcControl.querySelectorAll('.smartArea .pin').length;
                 });
 
                 var smartNoteDeleteNote = adcControl.querySelector('.smartNote .deleteNote');
@@ -571,7 +567,7 @@
                     document.querySelector('html').style.cursor = 'default';
 
                     var counterNumber = adcControl.querySelector('.counterNumber');
-                    counterNumber.textContent = parseInt(items.length / slLength) - adcControl.querySelectorAll('.smartArea .pin').length;
+                    if (counterNumber !== null) counterNumber.textContent = parseInt(items.length / slLength) - adcControl.querySelectorAll('.smartArea .pin').length;
 
                     // live routing
                     if (window.askia
@@ -615,7 +611,7 @@
                 if (pinComment !== '' || (!askComment && pinFeeling > 0)) {
 
                     var counterNumber = adcControl.querySelector('.counterNumber');
-                    counterNumber.textContent = parseInt(counterNumber.textContent) - 1;
+                    if (counterNumber !== null) counterNumber.textContent = parseInt(counterNumber.textContent) - 1;
 
                     var offsetParent = offset(adcControl.querySelector('.smartBoard')),
                         xCoordParent = ((pinX + offset(adcControl.querySelector('.smartArea')).left) - offsetParent.left),
