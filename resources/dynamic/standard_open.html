@@ -55,6 +55,6 @@ For i = 1 To arr.Count
 	{% IF CurrentADC.PropValue("showCounter") = "1" Then %}
 		<div class="counterContainer" unselectable='on' onselectstart='return false;' onmousedown='return false;'><div class="counter"><div class="counterNumber"></div></div></div>
 	{% EndIF %}
-	<img class="smartBG" src="{%= imagePath %}" alt="" />
+	<img id="imgcheck_{%= CurrentADC.InstanceId %}" vclass="smartBG" src="{%= imagePath %}" alt="" />
 </div>
 

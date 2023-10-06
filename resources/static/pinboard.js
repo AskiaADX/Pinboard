@@ -190,7 +190,6 @@
     function Pinboard(options) {
 
         this.options = options;
-        this.instanceId = options.instanceId || 1;
         this.maxWidth = options.maxWidth || 400;
         this.controlWidth = options.controlWidth || "100%";
         this.controlAlign = options.controlAlign || 'center';
@@ -198,13 +197,12 @@
         this.popupQText = options.popupQText || '';
         this.currentQuestion = options.currentQuestion;
 
-        var adcControl = document.getElementById('adc_' + this.instanceId),
+        var instanceId = options.instanceId || 1;
+            adcControl = document.getElementById('adc_' + instanceId),
             smartBoard = adcControl.querySelectorAll('.smartBoard')[0],
-            total_images = !!adcControl.querySelector('img'),
             areaWidth = 0,
             areaHeight = 0,
             noteMessage = options.popupQText,
-            images_loaded = 0,
             resizedWidth = 0,
             resizedHeight = 0,
             ratio = 1,
@@ -228,8 +226,42 @@
         }
 
         var imgLoad = adcControl.querySelector('img');
-        imgLoad.setAttribute('src', this.imagePath + "?" + new Date().getTime());
+        imgLoad.setAttribute('src', this.imagePath);
         imgLoad.removeEventListener('load', function () { });
+        var img = new Image();
+        img.src = imgLoad.src;
+
+        function isTransparent(e) {
+            var offsetLeft = (this.offsetLeft) ? this.offsetLeft : 0;
+            var offsetTop = (this.offsetTop) ? this.offsetTop : 0;
+            var x = e.offsetX - offsetLeft,
+                y = e.offsetY - offsetTop;
+
+            var canvas = document.getElementById('imgcheck_' + instanceId + '-canvas') ||
+                (function (_this) {
+                    var e = document.createElement('canvas');
+                    e.setAttribute('width', _this.width);
+                    e.setAttribute('height', _this.height);
+                    e.setAttribute('id', _this.id + '-canvas');
+                    e.setAttribute('style', 'display:none;');
+                    document.querySelector('.smartBoard').appendChild(e);
+                    var cx = e.getContext('2d', {willReadFrequently: true});
+                    cx.drawImage(_this, 0, 0, _this.width, _this.height);
+                    return e;
+                })(imgLoad);
+
+            if (canvas.getContext === undefined) { return false; }
+            var ctx = canvas.getContext('2d');
+
+            if (ctx.getImageData(x, y, 1, 1).data[3] == 0) {
+                document.querySelector('html').style.cursor = 'default';
+                return true;
+            } else {
+                document.querySelector('html').style.cursor = 'crosshair';
+                return false;
+            }
+        }
+
         imgLoad.addEventListener('load', function () {
             // Get image sizes - this is the img
             areaWidth = this.width;
@@ -251,8 +283,21 @@
             smartBoard.style.width = resizedWidth + 'px';
             smartBoard.style.height = resizedHeight + 'px';
 
+            /*var canvas = document.getElementById("myCanvas");
+            canvas.width = resizedWidth;
+            canvas.height = resizedHeight;
+            canvas.style.width = resizedWidth + 'px';
+            canvas.style.height = resizedHeight + 'px';
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(this, 0, 0, canvas.width, canvas.height);*/
+
             init();
+
+            var smartArea = adcControl.querySelectorAll('.smartArea')[0];
+            smartArea.addEventListener('mousemove', isTransparent, true);
         });
+
+        
 
         function init() {
 
@@ -280,7 +325,7 @@
 
             smartArea.addEventListener('click', function (e) {
 
-                if (this.querySelectorAll('.pin').length < (items.length / slLength)) {
+                if ((this.querySelectorAll('.pin').length < (items.length / slLength)) && isTransparent(event) === false) {
 
                     var offsetSmartArea = offset(this),
                         xCoord = (e.pageX - offsetSmartArea.left),
@@ -680,25 +725,6 @@
 
         }
 
-        // Attach all events
-        if (total_images > 0) {
-            var container = document.querySelector('#adc_' + this.instanceId);
-            var imgs = container.querySelectorAll('img');
-            for (var n = 0; n < imgs.length; n++) {
-                var fakeSrc = imgs[n].getAttribute('src');
-                imgs[n].style.display = 'none';
-                imgs[n].addEventListener('load', function () {
-                    images_loaded++;
-                    if (images_loaded >= total_images) {
-                        container.style.visibility = 'visible';
-                    }
-                })
-                imgs[n].setAttribute('src', fakeSrc);
-            }
-        } else {
-            container.style.visibility = 'visible';
-            init();
-        }
 
     }
 
