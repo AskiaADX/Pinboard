@@ -370,8 +370,8 @@
                         this.appendChild(document.querySelector('.tempArea .pin.active'));
                         var dataPinId2 = adcControl.querySelector('[data-pinid="' + pinID + '"]');
                         dataPinId2.dataset.target = e.target;
-                        dataPinId2.dataset.x = xCoord;
-                        dataPinId2.dataset.y = yCoord;
+                        dataPinId2.dataset.x = xCoord * ratioX;
+                        dataPinId2.dataset.y = yCoord * ratioY;
                         dataPinId2.dataset.x0 = xCoordParent;
                         dataPinId2.dataset.y0 = yCoordParent;
                         addNote(e.target, xCoord, yCoord, xCoordParent, yCoordParent, pinID);
