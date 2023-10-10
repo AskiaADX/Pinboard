@@ -25,3 +25,4 @@ v4.1.2 - refactored the code to remove jQuery dependencies and use vanilla javas
 v4.1.3 - Allow pins only on no transparent pixel
 v4.1.4 - fixed pin position when resize window and reload
 v4.1.5 - fixed position of the pin
+v4.1.6 - fixed zoom

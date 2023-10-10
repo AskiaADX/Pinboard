@@ -376,13 +376,13 @@
                         dataPinId2.dataset.y0 = yCoordParent;
                         addNote(e.target, xCoord, yCoord, xCoordParent, yCoordParent, pinID);
 
-                        if ((document.body.clientWidth / window.innerWidth) > 1) {
+                        /* if ((document.body.clientWidth / window.innerWidth) > 1) {
                             var zoom = document.body.clientWidth / window.innerWidth;
                             dataPinId2.dataset.x = xCoord * ratioX * zoom;
                             dataPinId2.dataset.y = yCoord * ratioY * zoom;
                             dataPinId2.dataset.x0 = xCoordParent * zoom;
                             dataPinId2.dataset.y0 = yCoordParent * zoom;
-                        }
+                        } */
 
                         // enable pin editing
                         var pins = adcControl.querySelectorAll('.pin');
